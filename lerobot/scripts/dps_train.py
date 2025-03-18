@@ -137,7 +137,7 @@ def train(cfg: TrainPipelineConfig):
         logger.info("Setting model's tokenizer_max_length to 100")
         cfg.policy.tokenizer_max_length=100
     logger.info("Still creating policy...")
-    print(cfg.policy.pretrained_path)
+    # print(cfg.policy.pretrained_path)
     policy = make_policy(
         cfg=cfg.policy,
         device='cpu',
