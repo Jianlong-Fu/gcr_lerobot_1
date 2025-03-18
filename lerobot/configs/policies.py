@@ -42,7 +42,8 @@ class PreTrainedConfig(draccus.ChoiceRegistry, HubMixin, abc.ABC):
     pretrained_path : str = "/mnt/wangxiaofa/pi0_pretrain"
 
     def __post_init__(self):
-        self.pretrained_path = None
+        # self.pretrained_path = None
+        print(f"pos init")
 
     @property
     def type(self) -> str:

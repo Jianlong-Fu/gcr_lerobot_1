@@ -135,6 +135,7 @@ def make_policy(
     cfg.output_features = {key: ft for key, ft in features.items() if ft.type is FeatureType.ACTION}
     cfg.input_features = {key: ft for key, ft in features.items() if key not in cfg.output_features}
     kwargs["config"] = cfg
+    
     kwargs["pretrained_name_or_path"] = "/mnt/wangxiaofa/pi0_pretrain"
     policy = policy_cls.from_pretrained(**kwargs)
     print(f"Load from:{cfg.pretrained_path}")
