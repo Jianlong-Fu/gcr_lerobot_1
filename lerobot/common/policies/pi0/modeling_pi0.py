@@ -276,6 +276,7 @@ class PI0Policy(PreTrainedPolicy):
         if self.config.adapt_to_pi_aloha:
             batch[OBS_ROBOT] = self._pi_aloha_decode_state(batch[OBS_ROBOT])
 
+        # 先归一化，然后再pad
         batch = self.normalize_inputs(batch)
 
         # Action queue logic for n_action_steps > 1. When the action_queue is depleted, populate it by
@@ -309,6 +310,7 @@ class PI0Policy(PreTrainedPolicy):
             batch[OBS_ROBOT] = self._pi_aloha_decode_state(batch[OBS_ROBOT])
             batch[ACTION] = self._pi_aloha_encode_actions_inv(batch[ACTION])
 
+        # 先归一化，然后再pad
         batch = self.normalize_inputs(batch)
         batch = self.normalize_targets(batch)
 
