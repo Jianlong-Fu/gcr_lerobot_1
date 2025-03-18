@@ -141,9 +141,11 @@ def make_policy(
         # hyperparameters that we want to vary).
         kwargs["pretrained_name_or_path"] = cfg.pretrained_path
         policy = policy_cls.from_pretrained(**kwargs)
+        print(f"Load from:{cfg.pretrained_path}")
     else:
         # Make a fresh policy.
         policy = policy_cls(**kwargs)
+        print("training from scratch")
 
     # policy.to(device)
     assert isinstance(policy, nn.Module)

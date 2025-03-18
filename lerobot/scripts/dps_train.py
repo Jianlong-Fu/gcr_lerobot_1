@@ -75,7 +75,7 @@ def init_logger(cfg):
         # logger.addHandler(console_handler)
         
         # 文件Handler
-        log_path = Path(cfg.log_dir) / f"logs/{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+        log_path = Path(cfg.log_dir) / f"logs_with_pretrain/{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         log_path.parent.mkdir(parents=True, exist_ok=True)
         file_handler = logging.FileHandler(log_path)
         file_handler.setFormatter(formatter)
