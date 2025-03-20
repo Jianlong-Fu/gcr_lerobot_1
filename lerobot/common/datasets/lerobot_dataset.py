@@ -1392,12 +1392,14 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         sample_weights = np.array(sample_weights) / np.sum(sample_weights)
         print(f"Final weights:{sample_weights}")
         dataset_sample_counts = (sample_weights * dataset_sizes).astype(int)  # 计算子集大小
-
+        
+        dataset_len = sum(dataset_sample_counts)
+        print(f"Dataset len:{dataset_len}")
         print("Final sampling counts:")
         for i in range(len(dataset_sample_counts)):
-            print(f"Dataset:{dataset_names[i]} num:{dataset_sample_counts[i]} total:{len(datasets[i])}")
-        
-        # sample and use NamedSubset to contains dataset_name
+            ratio = dataset_sample_counts[i] / dataset_len
+            print(f"Dataset:{dataset_names[i]} has {dataset_sample_counts[i]} samples, has the ratio:{ratio}")
+        # sample and use NamedSubset to contain dataset_name
         selected_subsets = []
         episode_count = 0
         for dataset, num_samples, dataset_name in zip(datasets, dataset_sample_counts, dataset_names):
@@ -1413,10 +1415,12 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         self.dataset = ConcatDataset(selected_subsets)
         
         # calculate stats
+        self.max_action_dim = cfg.policy.max_action_dim
+        self.max_state_dim = cfg.policy.max_state_dim
         all_new_obs_image_keys = ["observation.images.primary", 
                                   "observation.images.secondary", 
                                   "observation.images.wrist"] # follow https://github.com/openvla/openvla/blob/main/prismatic/vla/datasets/rlds/oxe/configs.py
-        self.stats = aggregate_multi_stats(datasets, dataset_names) # Note: I modified this function
+        self.stats = aggregate_multi_stats(datasets, dataset_names, self.max_action_dim) # Note: I modified this function
         # print(f"Aggregated stats:{self.stats}")
         # update meta_features
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] - meta features: {meta_features}")
@@ -1447,6 +1451,19 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         # finally create the meta class
         self.meta = LeRobotDatasetMetadata.create_with_stats_feats(stats=self.stats, features=meta_features) # Note: I added a class function
         self.meta.repo_id = "Prometheus"
+    
+    def pad_vector(self, vector, new_dim):
+        """Can be (batch_size x sequence_length x features_dimension)
+        or (batch_size x features_dimension)
+        """
+        if vector.shape[-1] == new_dim:
+            return vector
+        shape = list(vector.shape)
+        current_dim = shape[-1]
+        shape[-1] = new_dim
+        new_vector = torch.zeros(*shape, dtype=vector.dtype, device=vector.device)
+        new_vector[..., :current_dim] = vector
+        return new_vector
     
     def __len__(self):
         return len(self.dataset)
@@ -1482,6 +1499,9 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         else:
             item["source"] = f"{item['dataset_name']}_with_unknown_episode_id"
         # print(item.keys())
+        item["action"] = self.pad_vector(item["action"], self.max_action_dim)
+        # print(item["action"].shape)
+        item["observation.state"] = self.pad_vector(item["observation.state"], self.max_state_dim)
         return item
     @property
     def num_frames(self) -> int:

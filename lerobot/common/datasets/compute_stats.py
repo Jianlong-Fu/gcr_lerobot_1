@@ -178,7 +178,7 @@ def aggregate_stats(stats_list: list[dict[str, dict]]) -> dict[str, dict[str, np
 
     return aggregated_stats
 
-def aggregate_multi_stats(ls_datasets: list, data_names: list) -> dict[str, torch.Tensor]:
+def aggregate_multi_stats(ls_datasets: list, data_names: list, max_dim: int) -> dict[str, torch.Tensor]:
     """Aggregate stats of multiple LeRobot datasets into one set of stats without recomputing from scratch.
 
     The final stats will have the union of all data keys from each of the datasets.
@@ -203,6 +203,15 @@ def aggregate_multi_stats(ls_datasets: list, data_names: list) -> dict[str, torc
         data_keys.update(dataset.meta.stats.keys())
         
     stats = {k: {} for k in data_keys}
+    if max_dim:
+        import torch.nn.functional as F
+        for data_key in data_keys:
+            if "state" in data_key or "action" in data_key:
+                for stat_key in ["mean", "std", "min", "max"]:
+                    for ds in ls_datasets:
+                        cur_dim = ds.meta.stats[data_key][stat_key].shape[0]
+                        ds.meta.stats[data_key][stat_key] = F.pad(ds.meta.stats[data_key][stat_key], (0, max_dim -cur_dim), mode='constant', value=0)
+                        # print(cur_dim, ds.meta.stats[data_key][stat_key].shape)
     for data_key in data_keys:
         for stat_key in ["min", "max"]:
             # compute `max(dataset_0["max"], dataset_1["max"], ...)`
@@ -243,4 +252,21 @@ def aggregate_multi_stats(ls_datasets: list, data_names: list) -> dict[str, torc
                     )
         )
         stats[data_key]["mean"] = torch.from_numpy(stats[data_key]["mean"])
+        
+        # calculate for agibot
+        if "action" in data_key or "state" in data_key:
+            if "action" in data_key:
+                start_dim = 7
+                d_len = 22 - start_dim
+            if "state" in data_key:
+                start_dim = 8
+                d_len = 20 - start_dim
+            agi_d = None
+            for i in range(len(ls_datasets)):
+                if "agi" in data_names[i]:
+                    agi_d = ls_datasets[i]
+            stats[data_key]["mean"][start_dim:start_dim+d_len] = agi_d.meta.stats[data_key]["mean"][start_dim:start_dim+d_len]
+            stats[data_key]["std"][start_dim:start_dim+d_len] = agi_d.meta.stats[data_key]["std"][start_dim:start_dim+d_len]
+            stats[data_key]["max"][start_dim:start_dim+d_len] = agi_d.meta.stats[data_key]["max"][start_dim:start_dim+d_len]
+            stats[data_key]["min"][start_dim:start_dim+d_len] = agi_d.meta.stats[data_key]["min"][start_dim:start_dim+d_len]
     return stats
