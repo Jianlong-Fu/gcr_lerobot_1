@@ -206,8 +206,9 @@ def aggregate_multi_stats(ls_datasets: list, data_names: list, max_dim: int) -> 
     for data_key in data_keys:
         for stat_key in ["mean", "std", "min", "max"]:
             for ds in ls_datasets:
-                if isinstance(ds.meta.stats[data_key][stat_key], np.ndarray):
-                        ds.meta.stats[data_key][stat_key] = torch.from_numpy(ds.meta.stats[data_key][stat_key])
+                if data_key in ds.meta.stats:
+                    if isinstance(ds.meta.stats[data_key][stat_key], np.ndarray):
+                            ds.meta.stats[data_key][stat_key] = torch.from_numpy(ds.meta.stats[data_key][stat_key])
     if max_dim:
         import torch.nn.functional as F
         for data_key in data_keys:
