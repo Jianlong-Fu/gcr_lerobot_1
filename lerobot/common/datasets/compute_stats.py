@@ -253,7 +253,7 @@ def aggregate_multi_stats(ls_datasets: list, data_names: list, max_dim: int) -> 
                 if data_key in d.meta.stats
                         )
         )
-        # stats[data_key]["mean"] = torch.from_numpy(stats[data_key]["mean"])
+        stats[data_key]["mean"] = stats[data_key]["mean"]
         
         # calculate for agibot
         if "action" in data_key or "state" in data_key:
