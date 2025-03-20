@@ -220,7 +220,7 @@ def aggregate_multi_stats(ls_datasets: list, data_names: list, max_dim: int) -> 
             # compute `max(dataset_0["max"], dataset_1["max"], ...)`
             stats[data_key][stat_key] = einops.reduce(
                 torch.stack(
-                    [torch.from_numpy(ds.meta.stats[data_key][stat_key]) for ds in ls_datasets if data_key in ds.meta.stats],
+                    [ds.meta.stats[data_key][stat_key] for ds in ls_datasets if data_key in ds.meta.stats],
                     dim=0,
                 ),
                 "n ... -> ...",
@@ -243,7 +243,7 @@ def aggregate_multi_stats(ls_datasets: list, data_names: list, max_dim: int) -> 
         # NOTE: the brackets around (d.num_frames / total_samples) are needed tor minimize the risk of
         # numerical overflow!
         stats[data_key]["std"] = torch.sqrt(
-            torch.from_numpy(sum(
+            sum(
                 (
                     d.meta.stats[data_key]["std"] ** 2
                     + (d.meta.stats[data_key]["mean"] - stats[data_key]["mean"]) ** 2
@@ -252,9 +252,8 @@ def aggregate_multi_stats(ls_datasets: list, data_names: list, max_dim: int) -> 
                 for d in ls_datasets
                 if data_key in d.meta.stats
                         )
-                    )
         )
-        stats[data_key]["mean"] = torch.from_numpy(stats[data_key]["mean"])
+        # stats[data_key]["mean"] = torch.from_numpy(stats[data_key]["mean"])
         
         # calculate for agibot
         if "action" in data_key or "state" in data_key:
