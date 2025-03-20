@@ -209,7 +209,10 @@ def aggregate_multi_stats(ls_datasets: list, data_names: list, max_dim: int) -> 
             if "state" in data_key or "action" in data_key:
                 for stat_key in ["mean", "std", "min", "max"]:
                     for ds in ls_datasets:
+                        print(data_key)
                         cur_dim = ds.meta.stats[data_key][stat_key].shape[0]
+                        if isinstance(ds.meta.stats[data_key][stat_key], np.ndarray):
+                            ds.meta.stats[data_key][stat_key] = torch.from_numpy(ds.meta.stats[data_key][stat_key])
                         ds.meta.stats[data_key][stat_key] = F.pad(ds.meta.stats[data_key][stat_key], (0, max_dim -cur_dim), mode='constant', value=0)
                         # print(cur_dim, ds.meta.stats[data_key][stat_key].shape)
     for data_key in data_keys:
