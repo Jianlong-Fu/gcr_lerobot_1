@@ -195,6 +195,7 @@ def train(cfg: TrainPipelineConfig):
         config=cfg.deepspeed,
         model_parameters=policy.parameters(),
     )
+    logger.info(f"Training batch size:{model_engine.train_batch_size()}")
     
     # Resume training state
     step = 0
@@ -228,7 +229,6 @@ def train(cfg: TrainPipelineConfig):
         "dataloading_s": AverageMeter("data_s", ":.3f"),
         "optim_s": AverageMeter("optim_s", ":.3f"),
     }
-    
     train_tracker = MetricsTracker(
         model_engine.train_batch_size(),
         dataset.num_frames,
