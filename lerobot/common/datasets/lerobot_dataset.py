@@ -86,6 +86,7 @@ from lerobot.common.datasets.video_utils import (
 )
 from lerobot.common.robot_devices.robots.utils import Robot
 from lerobot.configs.policies import PreTrainedConfig
+from tabulate import tabulate
 
 CODEBASE_VERSION = "v2.1"
 
@@ -1391,21 +1392,27 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
             print(f"Banlanced:{sample_weights}")
         sample_weights = np.array(sample_weights) / np.sum(sample_weights)
         print(f"Final weights:{sample_weights}")
-        dataset_sample_counts = (sample_weights * dataset_sizes).astype(int)  # 计算子集大小
+        dataset_len = cfg.steps * 4
+        dataset_sample_counts = (sample_weights * dataset_len).astype(int)  # 计算子集大小
         
-        dataset_len = sum(dataset_sample_counts)
         print(f"Dataset len:{dataset_len}")
-        print("Final sampling counts:")
-        for i in range(len(dataset_sample_counts)):
-            ratio = dataset_sample_counts[i] / dataset_len
-            print(f"Dataset:{dataset_names[i]} has {dataset_sample_counts[i]} samples, has the ratio:{ratio}")
+        print("Final sampling info:")
+        table_data = [
+            [dataset_names[i], len(datasets[i]), dataset_sample_counts[i], f"{sample_weights[i]:.4f}"]
+            for i in range(len(dataset_sample_counts))
+        ]
+        print(tabulate(table_data, headers=["Dataset", "Total Length", "Samples", "Ratio"], tablefmt="grid"))
         # sample and use NamedSubset to contain dataset_name
         selected_subsets = []
         episode_count = 0
         for dataset, num_samples, dataset_name in zip(datasets, dataset_sample_counts, dataset_names):
             indices = list(range(len(dataset)))
-            sampled_indices = random.sample(indices, min(num_samples, len(dataset)))  # 采样
-            episode_this_dataset = int(dataset.num_episodes * (min(num_samples, len(dataset))/len(dataset)))
+            # 这个不允许重复采样
+            # sampled_indices = random.sample(indices, min(num_samples, len(dataset)))  # 采样
+            # episode_this_dataset = int(dataset.num_episodes * (min(num_samples, len(dataset))/len(dataset)))
+            # 允许重复采样，当num_samples>len(dataset)时
+            sampled_indices = random.choices(indices, k=num_samples)
+            episode_this_dataset = int(dataset.num_episodes * (num_samples / len(dataset)))
             episode_count += episode_this_dataset
             selected_subsets.append(NamedSubset(dataset, sampled_indices, dataset_name))
         
