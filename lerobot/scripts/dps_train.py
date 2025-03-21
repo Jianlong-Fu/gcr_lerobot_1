@@ -195,7 +195,7 @@ def train(cfg: TrainPipelineConfig):
         config=cfg.deepspeed,
         model_parameters=policy.parameters(),
     )
-    logger.info(f"Training batch size:{model_engine.train_batch_size()}")
+    logger.info(f"Training batch size:{model_engine.train_batch_size()}") # micro_size * gradient_cum_size * gpu_num
     
     # Resume training state
     step = 0
