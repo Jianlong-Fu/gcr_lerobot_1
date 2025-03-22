@@ -1353,9 +1353,9 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         # get dataset and dataset length
         parent_dir = "/mnt/wangxiaofa/robot_dataset/lerobot-format/"
         # parent_dir = "/data_16T/lerobot_openx/"
-        datasets = []
-        dataset_sizes = []
-        dataset_names = []
+        self.datasets = []
+        self.dataset_sizes = []
+        self.dataset_names = []
         meta_features = None
         with open(vla2root_json, "r") as f:
             vla2data_root = json.load(f)
@@ -1375,9 +1375,9 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
                     image_transforms=image_transforms,
                     video_backend=cfg.dataset.video_backend
                 )
-                datasets.append(dataset)
-                dataset_sizes.append(len(dataset))
-                dataset_names.append(dataset_name)
+                self.datasets.append(dataset)
+                self.dataset_sizes.append(len(dataset))
+                self.dataset_names.append(dataset_name)
             else:
                 print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] - {dataset_name} not found in vla2root.json, skipping...")
         if banlance_weight:
@@ -1388,24 +1388,25 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
                 if dataset in vla2data_root.keys()
             ]
             assert len(new_sample_weights) == len(datasets), "Sample weights and datasets should have the same length"
-            sample_weights = np.array(new_sample_weights) * np.array(dataset_sizes)
+            sample_weights = np.array(new_sample_weights) * np.array(self.dataset_sizes)
             print(f"Banlanced:{sample_weights}")
-        sample_weights = np.array(sample_weights) / np.sum(sample_weights)
+        self.sample_weights = np.array(sample_weights) / np.sum(sample_weights)
         print(f"Final weights:{sample_weights}")
-        dataset_len = cfg.steps * 4
-        dataset_sample_counts = (sample_weights * dataset_len).astype(int)  # 计算子集大小
+        self.dataset_len = cfg.steps * 4
+        dataset_sample_counts = (self.sample_weights * self.dataset_len).astype(int)  # 计算子集大小
         
-        print(f"Dataset len:{dataset_len}")
+        print(f"Dataset len:{self.dataset_len}")
         print("Final sampling info:")
         table_data = [
-            [dataset_names[i], len(datasets[i]), dataset_sample_counts[i], f"{sample_weights[i]:.4f}"]
+            [self.dataset_names[i], len(datasets[i]), dataset_sample_counts[i], f"{self.sample_weights[i]:.4f}"]
             for i in range(len(dataset_sample_counts))
         ]
         print(tabulate(table_data, headers=["Dataset", "Total Length", "Samples", "Ratio"], tablefmt="grid"))
         # sample and use NamedSubset to contain dataset_name
         selected_subsets = []
+        self.selected_indices = []
         episode_count = 0
-        for dataset, num_samples, dataset_name in zip(datasets, dataset_sample_counts, dataset_names):
+        for dataset, num_samples, dataset_name in zip(self.datasets, dataset_sample_counts, self.dataset_names):
             indices = list(range(len(dataset)))
             # 这个不允许重复采样
             # sampled_indices = random.sample(indices, min(num_samples, len(dataset)))  # 采样
@@ -1414,12 +1415,13 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
             sampled_indices = random.choices(indices, k=num_samples)
             episode_this_dataset = int(dataset.num_episodes * (num_samples / len(dataset)))
             episode_count += episode_this_dataset
-            selected_subsets.append(NamedSubset(dataset, sampled_indices, dataset_name))
+            self.selected_indices.append(sampled_indices)
+            # selected_subsets.append(NamedSubset(dataset, sampled_indices, dataset_name))
         
         self.num_episodes = episode_count
 
         # concat the selected dataset
-        self.dataset = ConcatDataset(selected_subsets)
+        # self.dataset = ConcatDataset(selected_subsets)
         
         # calculate stats
         self.max_action_dim = cfg.policy.max_action_dim
@@ -1427,7 +1429,7 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         all_new_obs_image_keys = ["observation.images.primary", 
                                   "observation.images.secondary", 
                                   "observation.images.wrist"] # follow https://github.com/openvla/openvla/blob/main/prismatic/vla/datasets/rlds/oxe/configs.py
-        self.stats = aggregate_multi_stats(datasets, dataset_names, self.max_action_dim) # Note: I modified this function
+        self.stats = aggregate_multi_stats(datasets, self.dataset_names, self.max_action_dim) # Note: I modified this function
         # print(f"Aggregated stats:{self.stats}")
         # update meta_features
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] - meta features: {meta_features}")
@@ -1473,13 +1475,23 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         return new_vector
     
     def __len__(self):
-        return len(self.dataset)
+        # return len(self.dataset)
+        return self.dataset_len
 
     def __getitem__(self, index):
-        item = self.dataset[index]
-        # for key, value in item.items():
-        #     print(f"{key}: {value}")
-        dataset_name = item["dataset_name"]
+        # v2
+        selected_dataset = random.choices(self.datasets, weights=self.sample_weights, k=1)[0]
+        dataset_index = self.datasets.index(selected_dataset)
+        dataset_name = self.dataset_names[dataset_index]
+        indices = self.selected_indices[dataset_index] # the selected indices of this dataset
+        selected_id = random.choice(indices) # equal prob
+        item = selected_dataset[selected_id]
+        item['dataset_name'] = dataset_name
+        # v1
+        # item = self.dataset[index]
+        # # for key, value in item.items():
+        # #     print(f"{key}: {value}")
+        # dataset_name = item["dataset_name"]
         # unify the observation
         data_config = OXE_DATASET_CONFIGS[dataset_name]
         image_obs_keys = data_config["image_obs_keys"]
