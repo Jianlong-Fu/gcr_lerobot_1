@@ -216,7 +216,10 @@ def aggregate_multi_stats(ls_datasets: list, data_names: list, max_dim: int) -> 
                 if "state" in data_key or "action" in data_key:
                         for ds in ls_datasets:
                             cur_dim = ds.meta.stats[data_key][stat_key].shape[0]
-                            ds.meta.stats[data_key][stat_key] = F.pad(ds.meta.stats[data_key][stat_key], (0, max_dim -cur_dim), mode='constant', value=0)
+                            if stat_key != "std":
+                                ds.meta.stats[data_key][stat_key] = F.pad(ds.meta.stats[data_key][stat_key], (0, max_dim - cur_dim), mode='constant', value=0)
+                            else:
+                                ds.meta.stats[data_key][stat_key] = F.pad(ds.meta.stats[data_key][stat_key], (0, max_dim - cur_dim), mode='constant', value=1)
                             # print(cur_dim, ds.meta.stats[data_key][stat_key].shape)
     for data_key in data_keys:
         for stat_key in ["min", "max"]:
