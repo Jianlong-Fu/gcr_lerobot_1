@@ -1398,7 +1398,7 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         print(f"Dataset len:{self.dataset_len}")
         print("Final sampling info:")
         table_data = [
-            [self.dataset_names[i], len(datasets[i]), dataset_sample_counts[i], f"{self.sample_weights[i]:.4f}"]
+            [self.dataset_names[i], len(self.datasets[i]), dataset_sample_counts[i], f"{self.sample_weights[i]:.4f}"]
             for i in range(len(dataset_sample_counts))
         ]
         print(tabulate(table_data, headers=["Dataset", "Total Length", "Samples", "Ratio"], tablefmt="grid"))
@@ -1429,7 +1429,7 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         all_new_obs_image_keys = ["observation.images.primary", 
                                   "observation.images.secondary", 
                                   "observation.images.wrist"] # follow https://github.com/openvla/openvla/blob/main/prismatic/vla/datasets/rlds/oxe/configs.py
-        self.stats = aggregate_multi_stats(datasets, self.dataset_names, self.max_action_dim) # Note: I modified this function
+        self.stats = aggregate_multi_stats(self.datasets, self.dataset_names, self.max_action_dim) # Note: I modified this function
         # print(f"Aggregated stats:{self.stats}")
         # update meta_features
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] - meta features: {meta_features}")
