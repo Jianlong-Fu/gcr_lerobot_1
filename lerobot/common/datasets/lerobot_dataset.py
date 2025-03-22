@@ -1387,7 +1387,7 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
                 for sw, dataset in zip(sample_weights, included_datasets) 
                 if dataset in vla2data_root.keys()
             ]
-            assert len(new_sample_weights) == len(datasets), "Sample weights and datasets should have the same length"
+            assert len(new_sample_weights) == len(self.datasets), "Sample weights and datasets should have the same length"
             sample_weights = np.array(new_sample_weights) * np.array(self.dataset_sizes)
             print(f"Banlanced:{sample_weights}")
         self.sample_weights = np.array(sample_weights) / np.sum(sample_weights)
