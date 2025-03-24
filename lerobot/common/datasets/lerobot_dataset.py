@@ -1392,7 +1392,7 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
             print(f"Banlanced:{sample_weights}")
         self.sample_weights = np.array(sample_weights) / np.sum(sample_weights)
         print(f"Final weights:{sample_weights}")
-        self.dataset_len = cfg.steps * 4
+        self.dataset_len = cfg.steps
         dataset_sample_counts = (self.sample_weights * self.dataset_len).astype(int)  # 计算子集大小
         
         print(f"Dataset len:{self.dataset_len}")

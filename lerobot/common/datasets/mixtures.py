@@ -216,6 +216,12 @@ OXE_NAMED_MIXTURES: Dict[str, List[Tuple[str, float]]] = {
         ("roboturk", 2.0),
         ("stanford_hydra_dataset_converted_externally_to_rlds", 2.0),
         ("taco_play", 2.0),
+     ],
+     "fractal_only": [
+         ("fractal20220817_data", 1.0), 
+     ],
+     "bridge_only":[
+         ("bridge_orig", 1.0), 
      ]
 }
 # fmt: on
