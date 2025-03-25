@@ -142,6 +142,7 @@ def train(cfg: TrainPipelineConfig):
         cfg=cfg.policy,
         device='cpu',
         ds_meta=dataset.meta,
+        weight_pt_path="/mnt/wangxiaofa/pi0_pretrain/model.pt"
     )
     logger.info("Policy model created...")
 
