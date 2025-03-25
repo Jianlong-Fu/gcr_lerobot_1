@@ -87,10 +87,7 @@ from lerobot.common.datasets.video_utils import (
 from lerobot.common.robot_devices.robots.utils import Robot
 from lerobot.configs import parser
 from lerobot.configs.policies import PreTrainedConfig
-<<<<<<< HEAD
-=======
 from lerobot.configs.train import TrainPipelineConfig
->>>>>>> upstream/main
 from tabulate import tabulate
 
 CODEBASE_VERSION = "v2.1"
@@ -1392,32 +1389,11 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
                 for sw, dataset in zip(sample_weights, included_datasets) 
                 if dataset in vla2data_root.keys()
             ]
-<<<<<<< HEAD
-            # assert len(new_sample_weights) == len(self.datasets), "Sample weights and datasets should have the same length"
-=======
->>>>>>> upstream/main
             sample_weights = np.array(new_sample_weights) * np.array(self.dataset_sizes)
             print(f"Banlanced:{sample_weights}")
         self.sample_weights = np.array(sample_weights) / np.sum(sample_weights)
         print(f"Final weights:{sample_weights}")
         self.dataset_len = sum(self.dataset_sizes)
-<<<<<<< HEAD
-        print(f"Dataset len:{self.dataset_len}")
-        print("Final sampling info:")
-        table_data = [
-            [self.dataset_names[i], len(self.datasets[i]), f"{self.sample_weights[i]:.4f}"]
-            for i in range(len(self.datasets))
-        ]
-        print(tabulate(table_data, headers=["Dataset", "Samples", "Ratio"], tablefmt="grid"))
-        # sample and use NamedSubset to contain dataset_name
-        self.selected_indices = []
-        episode_count = 0
-        for dataset in self.datasets:
-            episode_this_dataset = dataset.num_episodes
-            episode_count += episode_this_dataset
-        
-        self.num_episodes = episode_count
-=======
         dataset_sample_counts = (self.sample_weights * self.dataset_len).astype(int)  # 计算子集大小
         
         print(f"Dataset len:{self.dataset_len}")
@@ -1451,7 +1427,6 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         # concat the selected dataset
         # self.dataset = ConcatDataset(selected_subsets)
         
->>>>>>> upstream/main
         # calculate stats
         self.max_action_dim = cfg.policy.max_action_dim
         self.max_state_dim = cfg.policy.max_state_dim
@@ -1513,11 +1488,7 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         selected_dataset = random.choices(self.datasets, weights=self.sample_weights, k=1)[0]
         dataset_index = self.datasets.index(selected_dataset)
         dataset_name = self.dataset_names[dataset_index]
-<<<<<<< HEAD
-        indices = range(len(selected_dataset))
-=======
         indices = self.selected_indices[dataset_index] # the selected indices of this dataset
->>>>>>> upstream/main
         selected_id = random.choice(indices) # equal prob
         item = selected_dataset[selected_id]
         item['dataset_name'] = dataset_name
