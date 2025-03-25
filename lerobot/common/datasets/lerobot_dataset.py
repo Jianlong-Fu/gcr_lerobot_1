@@ -1387,42 +1387,27 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
                 for sw, dataset in zip(sample_weights, included_datasets) 
                 if dataset in vla2data_root.keys()
             ]
-            assert len(new_sample_weights) == len(self.datasets), "Sample weights and datasets should have the same length"
+            # assert len(new_sample_weights) == len(self.datasets), "Sample weights and datasets should have the same length"
             sample_weights = np.array(new_sample_weights) * np.array(self.dataset_sizes)
             print(f"Banlanced:{sample_weights}")
         self.sample_weights = np.array(sample_weights) / np.sum(sample_weights)
         print(f"Final weights:{sample_weights}")
-        self.dataset_len = cfg.steps
-        dataset_sample_counts = (self.sample_weights * self.dataset_len).astype(int)  # 计算子集大小
-        
+        self.dataset_len = sum(self.dataset_sizes)
         print(f"Dataset len:{self.dataset_len}")
         print("Final sampling info:")
         table_data = [
-            [self.dataset_names[i], len(self.datasets[i]), dataset_sample_counts[i], f"{self.sample_weights[i]:.4f}"]
-            for i in range(len(dataset_sample_counts))
+            [self.dataset_names[i], len(self.datasets[i]), f"{self.sample_weights[i]:.4f}"]
+            for i in range(len(self.datasets))
         ]
-        print(tabulate(table_data, headers=["Dataset", "Total Length", "Samples", "Ratio"], tablefmt="grid"))
+        print(tabulate(table_data, headers=["Dataset", "Samples", "Ratio"], tablefmt="grid"))
         # sample and use NamedSubset to contain dataset_name
-        selected_subsets = []
         self.selected_indices = []
         episode_count = 0
-        for dataset, num_samples, dataset_name in zip(self.datasets, dataset_sample_counts, self.dataset_names):
-            indices = list(range(len(dataset)))
-            # 这个不允许重复采样
-            # sampled_indices = random.sample(indices, min(num_samples, len(dataset)))  # 采样
-            # episode_this_dataset = int(dataset.num_episodes * (min(num_samples, len(dataset))/len(dataset)))
-            # 允许重复采样，当num_samples>len(dataset)时
-            sampled_indices = random.choices(indices, k=num_samples)
-            episode_this_dataset = int(dataset.num_episodes * (num_samples / len(dataset)))
+        for dataset in self.datasets:
+            episode_this_dataset = dataset.num_episodes
             episode_count += episode_this_dataset
-            self.selected_indices.append(sampled_indices)
-            # selected_subsets.append(NamedSubset(dataset, sampled_indices, dataset_name))
         
         self.num_episodes = episode_count
-
-        # concat the selected dataset
-        # self.dataset = ConcatDataset(selected_subsets)
-        
         # calculate stats
         self.max_action_dim = cfg.policy.max_action_dim
         self.max_state_dim = cfg.policy.max_state_dim
@@ -1484,7 +1469,7 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         selected_dataset = random.choices(self.datasets, weights=self.sample_weights, k=1)[0]
         dataset_index = self.datasets.index(selected_dataset)
         dataset_name = self.dataset_names[dataset_index]
-        indices = self.selected_indices[dataset_index] # the selected indices of this dataset
+        indices = range(len(selected_dataset))
         selected_id = random.choice(indices) # equal prob
         item = selected_dataset[selected_id]
         item['dataset_name'] = dataset_name
