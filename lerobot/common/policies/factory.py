@@ -79,6 +79,7 @@ def make_policy(
     device: str | torch.device,
     ds_meta: LeRobotDatasetMetadata | None = None,
     env_cfg: EnvConfig | None = None,
+    weight_pt_path: str | None = None
 ) -> PreTrainedPolicy:
     """Make an instance of a policy class.
 
@@ -150,6 +151,13 @@ def make_policy(
         policy = policy_cls(**kwargs)
         print("training from scratch")
 
+    if weight_pt_path:
+        weights = torch.load(weight_pt_path, map_location="cpu")
+        # 过滤掉包含 "gemma_expert" 的权重
+        filtered_weights = {k: v for k, v in weights.items() if "gemma_expert" not in k}
+        policy.load_state_dict(filtered_weights, strict=False)
+        print(f"Load pt weights from:{weight_pt_path}")
+    
     # policy.to(device)
     assert isinstance(policy, nn.Module)
 
