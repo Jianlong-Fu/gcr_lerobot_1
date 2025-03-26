@@ -1399,12 +1399,11 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         print(f"Dataset len:{self.dataset_len}")
         print("Final sampling info:")
         table_data = [
-            [self.dataset_names[i], len(self.datasets[i]), dataset_sample_counts[i], f"{self.sample_weights[i]:.4f}"]
-            for i in range(len(dataset_sample_counts))
+            [self.dataset_names[i], len(self.datasets[i]), f"{self.sample_weights[i]:.4f}"]
+            for i in range(len(self.datasets))
         ]
-        print(tabulate(table_data, headers=["Dataset", "Total Length", "Samples", "Ratio"], tablefmt="grid"))
+        print(tabulate(table_data, headers=["Dataset", "Samples", "Ratio"], tablefmt="grid"))
         # sample and use NamedSubset to contain dataset_name
-        selected_subsets = []
         self.selected_indices = []
         episode_count = 0
         for dataset, num_samples, dataset_name in zip(self.datasets, dataset_sample_counts, self.dataset_names):
