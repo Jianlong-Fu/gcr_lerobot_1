@@ -47,7 +47,7 @@ class PI0Config(PreTrainedConfig):
     tokenizer_max_length: int = 48
 
     # Projector
-    proj_width: int = 1024
+    proj_width: int = 2048
 
     # Decoding
     num_steps: int = 100
