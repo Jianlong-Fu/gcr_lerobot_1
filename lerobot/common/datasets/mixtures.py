@@ -222,6 +222,10 @@ OXE_NAMED_MIXTURES: Dict[str, List[Tuple[str, float]]] = {
      ],
      "bridge_only":[
          ("bridge_orig", 1.0), 
+     ],
+     "env_in_simpler":[
+         ("fractal20220817_data", 1.0), 
+         ("bridge_orig", 1.0), 
      ]
 }
 # fmt: on

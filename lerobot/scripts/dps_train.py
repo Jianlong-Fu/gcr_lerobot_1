@@ -124,7 +124,9 @@ def train(cfg: TrainPipelineConfig):
 
     # Dataset setup
     dataset = MultiDatasetforDistTraining(cfg=cfg, image_transforms=image_transforms, 
-                           seed=cfg.seed, data_mix="oxe_magic_soup_plus",
+                           seed=cfg.seed, 
+                           # data_mix="oxe_magic_soup_plus",
+                           data_mix="env_in_simpler",
                            vla2root_json="vla2root.json")
     # dataset = MultiDatasetforDistTraining(cfg=cfg, image_transforms=image_transforms, 
     #                        seed=cfg.seed, data_mix="oxe_magic_soup_plus",
@@ -142,7 +144,7 @@ def train(cfg: TrainPipelineConfig):
         cfg=cfg.policy,
         device='cpu',
         ds_meta=dataset.meta,
-        weight_pt_path="/mnt/wangxiaofa/pi0_pretrain/model.pt"
+        # weight_pt_path="/mnt/wangxiaofa/pi0_pretrain/model.pt"
     )
     logger.info("Policy model created...")
 

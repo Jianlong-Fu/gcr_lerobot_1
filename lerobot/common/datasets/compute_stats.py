@@ -274,6 +274,7 @@ def aggregate_multi_stats(ls_datasets: list, data_names: list, max_dim: int) -> 
                 if "agi" in data_names[i]:
                     agi_d = ls_datasets[i]
             if agi_d:
+                print("use agibot dataset")
                 stats[data_key]["mean"][start_dim:start_dim+d_len] = agi_d.meta.stats[data_key]["mean"][start_dim:start_dim+d_len]
                 stats[data_key]["std"][start_dim:start_dim+d_len] = agi_d.meta.stats[data_key]["std"][start_dim:start_dim+d_len]
                 stats[data_key]["max"][start_dim:start_dim+d_len] = agi_d.meta.stats[data_key]["max"][start_dim:start_dim+d_len]
