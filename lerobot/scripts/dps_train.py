@@ -32,7 +32,7 @@ from torch.utils.data.distributed import DistributedSampler
 
 from lerobot.common.datasets.factory import make_dataset
 from lerobot.common.datasets.transforms import ImageTransforms
-from lerobot.common.datasets.lerobot_dataset import MultiDatasetforDistTraining
+from lerobot.common.datasets.lerobot_dataset import MultiDatasetforDistTraining, LeRobotDataset
 from lerobot.common.datasets.sampler import EpisodeAwareSampler, DistEpisodeAwareSampler
 from lerobot.common.datasets.utils import cycle
 from lerobot.common.envs.factory import make_env
@@ -123,14 +123,19 @@ def train(cfg: TrainPipelineConfig):
         set_seed(cfg.seed + int(os.environ.get('RANK', 0)))
 
     # Dataset setup
-    dataset = MultiDatasetforDistTraining(cfg=cfg, image_transforms=image_transforms, 
-                           seed=cfg.seed, 
-                           # data_mix="oxe_magic_soup_plus",
-                           data_mix="env_in_simpler",
-                           vla2root_json="vla2root.json")
+    # dataset = MultiDatasetforDistTraining(cfg=cfg, image_transforms=image_transforms, 
+    #                        seed=cfg.seed, 
+    #                        # data_mix="oxe_magic_soup_plus",
+    #                        data_mix="env_in_simpler",
+    #                        vla2root_json="vla2root.json")
     # dataset = MultiDatasetforDistTraining(cfg=cfg, image_transforms=image_transforms, 
     #                        seed=cfg.seed, data_mix="oxe_magic_soup_plus",
     #                        vla2root_json="vla2root_bak.json")
+    # for finetuning on simuleted enviroments
+    # data_root = "/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_spatial_no_noops_lerobot"
+    dataset = LeRobotDataset(repo_id=cfg.dataset.repo_id, 
+                             root=cfg.dataset.root)
+    logger.info(f"Data load from:{cfg.dataset.root}")
     logger.info(f"Dataset: {dataset}")
 
     # Policy setup
