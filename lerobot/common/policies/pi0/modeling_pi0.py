@@ -318,6 +318,7 @@ class PI0Policy(PreTrainedPolicy):
         state = self.prepare_state(batch)
         lang_tokens, lang_masks = self.prepare_language(batch)
         actions = self.prepare_action(batch)
+        print(images[0].shape, actions.shape, state.shape)
         actions_is_pad = batch.get("actions_id_pad")
         
         images = [self.convert_to_dtype(img) for img in images]
