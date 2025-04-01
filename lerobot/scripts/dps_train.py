@@ -134,7 +134,8 @@ def train(cfg: TrainPipelineConfig):
     # for finetuning on simuleted enviroments
     # data_root = "/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_spatial_no_noops_lerobot"
     dataset = LeRobotDataset(repo_id=cfg.dataset.repo_id, 
-                             root=cfg.dataset.root)
+                             root=cfg.dataset.root,
+                             image_transforms=image_transforms)
     logger.info(f"Data load from:{cfg.dataset.root}")
     logger.info(f"Dataset: {dataset}")
 
