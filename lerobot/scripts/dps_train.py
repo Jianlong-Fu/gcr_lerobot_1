@@ -356,5 +356,6 @@ def train(cfg: TrainPipelineConfig):
 
 if __name__ == "__main__":
     # os.environ["TOKENIZERS_PARALLELISM"] = "false"
-    os.environ['WANDB_API_KEY'] = '7f1c1acfe477063902c617b0e8ef24d2b76ed447'
+    # https://wandb.ai/authorize
+    os.environ['WANDB_API_KEY'] = '9e1c3ac77856b8ebb5573c4e1e250c84aabfb904'
     train()

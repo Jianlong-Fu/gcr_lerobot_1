@@ -1,0 +1,11 @@
+deepspeed lerobot/scripts/dps_train.py \
+    --deepspeed="./ds_zero2.json" \
+    --policy.type="pi0" \
+    --dataset.root="/Data/lerobot_data/simulated/libero_spatial_no_noops_lerobot" \
+    --dataset.repo_id="any/simulted" \
+    --wandb.enable=true \
+    --wandb.project="pi0-ft-simulated" \
+    --job_name="pi0-04-01-ft-libero-spatial" \
+    --log_dir="logs" \
+    --output_dir="/Data/lzl/pi0-ft-simulated/0401-bs768-ft-libero-spatial-1st" \
+    --steps=30_000
