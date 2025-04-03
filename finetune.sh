@@ -1,11 +1,11 @@
 python lerobot/scripts/dps_train.py \
     --deepspeed="./ds_zero2.json" \
     --policy.type="pi0" \
-    --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_goal_no_noops_lerobot" \
+    --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_object_no_noops_lerobot" \
     --dataset.repo_id="any/simulted" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="pi0-04-01-ft-libero-goal" \
+    --job_name="pi0-04-01-ft-libero-object" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0403-ft-libero-goal-1st" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0403-ft-libero-object-1st" \
     --steps=30_000
