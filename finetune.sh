@@ -1,11 +1,11 @@
 python lerobot/scripts/dps_train.py \
     --deepspeed="./ds_zero2.json" \
     --policy.type="pi0" \
-    --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_object_no_noops_lerobot" \
+    --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format/calvin_task_ABC_D_training" \
     --dataset.repo_id="any/simulted" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="pi0-04-05-ft-libero-object" \
+    --job_name="pi0-04-06-ft-calvin-task-ABC-D" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0405-ft-libero-object-1st" \
-    --steps=60_000
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0406-ft-calvin-task-ABC-D-1st" \
+    --steps=120_000
