@@ -50,14 +50,15 @@ class PI0Config(PreTrainedConfig):
     proj_width: int = 1024
 
     # Decoding
-    num_steps: int = 100
+    num_steps: int = 10
 
     # Attention utils
     use_cache: bool = True
     attention_implementation: str = "eager"  # or fa2, flex
 
     # Finetuning settings
-    freeze_vision_encoder: bool = True
+    # freeze_vision_encoder: bool = True
+    freeze_vision_encoder: bool = False
     train_expert_only: bool = False
     train_state_proj: bool = True
 
