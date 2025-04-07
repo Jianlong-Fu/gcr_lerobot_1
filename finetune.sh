@@ -8,4 +8,4 @@ python lerobot/scripts/dps_train.py \
     --job_name="pi0-04-07-ft-libero-goal" \
     --log_dir="/mnt/wangxiaofa/logs" \
     --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0407-ft-libero-goal-train-vision-1st" \
-    --steps=100_000
+    --steps=60_000
