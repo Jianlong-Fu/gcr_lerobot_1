@@ -58,7 +58,7 @@ class PI0Config(PreTrainedConfig):
 
     # Finetuning settings
     # freeze_vision_encoder: bool = True
-    freeze_vision_encoder: bool = False
+    freeze_vision_encoder: bool = True
     train_expert_only: bool = False
     train_state_proj: bool = True
 
