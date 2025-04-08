@@ -5,7 +5,7 @@ python lerobot/scripts/dps_train.py \
     --dataset.repo_id="any/simulted" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="pi0-04-07-ft-libero-goal" \
+    --job_name="pi0-04-08-ft-libero-goal" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0407-ft-libero-goal-train-vision-1st" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0408-ft-libero-goal-train-vision-1st" \
     --steps=60_000
