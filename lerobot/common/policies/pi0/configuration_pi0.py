@@ -68,8 +68,8 @@ class PI0Config(PreTrainedConfig):
     optimizer_eps: float = 1e-8
     optimizer_weight_decay: float = 1e-10
 
-    # scheduler_warmup_steps: int = 1_000
-    scheduler_warmup_steps: int = 3_000
+    scheduler_warmup_steps: int = 1_000
+    # scheduler_warmup_steps: int = 3_000
     # -1 denotes keep unchanged
     scheduler_decay_steps: int = 300_00
     scheduler_decay_lr: float = 2.5e-6
