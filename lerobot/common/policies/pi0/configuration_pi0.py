@@ -70,7 +70,7 @@ class PI0Config(PreTrainedConfig):
 
     scheduler_warmup_steps: int = 3_000
     # -1 denotes keep unchanged
-    scheduler_decay_steps: int = 300_000
+    scheduler_decay_steps: int = 300_00
     scheduler_decay_lr: float = 2.5e-6
 
     # TODO: Add EMA
