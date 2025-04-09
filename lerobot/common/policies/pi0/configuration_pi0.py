@@ -69,7 +69,8 @@ class PI0Config(PreTrainedConfig):
     optimizer_weight_decay: float = 1e-10
 
     scheduler_warmup_steps: int = 3_000
-    scheduler_decay_steps: int = -1
+    # -1 denotes keep unchanged
+    scheduler_decay_steps: int = 300_000
     scheduler_decay_lr: float = 2.5e-6
 
     # TODO: Add EMA
