@@ -5,7 +5,7 @@ python lerobot/scripts/dps_train.py \
     --dataset.repo_id="any/simulted" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="pi0-04-09-ft-libero-goal-bs-16-with-lr-decay" \
+    --job_name="pi0-04-10-ft-libero-goal-bs-32-8gpu-gra-acc-1-with-lr-decay" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0409-ft-libero-goal-bs-16-with-lr-decay-1st" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0410-ft-libero-goal-bs-32-8gpu-gra-acc-1-with-lr-decay-1st" \
     --steps=30_000
