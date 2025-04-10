@@ -701,8 +701,11 @@ class LeRobotDataset(torch.utils.data.Dataset):
         if self.episodes is None:
             # path = str(self.root / "data")
             path = str(self.root / "merged.parquet")
-            # hf_dataset = parquet_to_dataset(parquet_file=path, split="train")
-            hf_dataset = load_dataset("parquet", data_files=path, split="train")
+            if os.path.exists(path):
+                hf_dataset = load_dataset("parquet", data_files=path, split="train")
+            else:
+                path = str(self.root / "data")
+                hf_dataset = load_dataset("parquet", data_dir=path, split="train")
             print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] - Dataset length is {len(hf_dataset)}")
             # hf_dataset = load_dataset("parquet", data_dir=path, split="train")
         else:
