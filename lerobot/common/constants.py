@@ -5,14 +5,14 @@ from pathlib import Path
 from huggingface_hub.constants import HF_HOME
 
 OBS_ENV = "observation.environment_state"
-# OBS_ROBOT = "observation.state"
+OBS_ROBOT = "observation.state"
 # for phy intelligence
-OBS_ROBOT = "state"
+# OBS_ROBOT = "state"
 OBS_IMAGE = "observation.image"
 OBS_IMAGES = "observation.images"
-# ACTION = "action"
+ACTION = "action"
 # for phy intelligence
-ACTION = "actions"
+# ACTION = "actions"
 
 # files & directories
 CHECKPOINTS_DIR = "checkpoints"

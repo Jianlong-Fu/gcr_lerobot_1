@@ -362,6 +362,7 @@ class PI0Policy(PreTrainedPolicy):
         img_masks = []
 
         present_img_keys = [key for key in self.config.image_features if key in batch]
+        # print(present_img_keys)
         missing_img_keys = [key for key in self.config.image_features if key not in batch]
 
         if len(present_img_keys) == 0:
