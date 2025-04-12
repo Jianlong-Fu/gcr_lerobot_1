@@ -79,9 +79,11 @@ def make_dataset(cfg: TrainPipelineConfig) -> LeRobotDataset | MultiLeRobotDatas
     Returns:
         LeRobotDataset | MultiLeRobotDataset
     """
+    # if cfg.dataset.image_transforms.enable else None
     image_transforms = (
-        ImageTransforms(cfg.dataset.image_transforms)
+        ImageTransforms(cfg.dataset.image_transforms) if cfg.dataset.image_transforms.enable else None
     )
+    print(image_transforms)
 
     if isinstance(cfg.dataset.repo_id, str):
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Loading dataset metadata for the first time.")
