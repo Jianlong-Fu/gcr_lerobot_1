@@ -34,7 +34,7 @@ from torch.utils.data import DataLoader
 
 from lerobot.common.datasets.factory import make_dataset
 from lerobot.common.datasets.transforms import ImageTransforms
-from lerobot.common.datasets.lerobot_dataset import MultiDatasetforDistTraining, LeRobotDataset
+from lerobot.common.datasets.lerobot_dataset import MultiDatasetforDistTraining, LeRobotDataset, MultiSameDataset
 from lerobot.common.datasets.sampler import EpisodeAwareSampler, DistEpisodeAwareSampler
 from lerobot.common.datasets.utils import cycle
 from lerobot.common.envs.factory import make_env
@@ -108,8 +108,9 @@ def train(cfg: TrainPipelineConfig):
     logger = init_logger(cfg)
     
     image_transforms = (
-        ImageTransforms(cfg.dataset.image_transforms)
+        ImageTransforms(cfg.dataset.image_transforms) if cfg.dataset.image_transforms.enable else None
     )
+    print(f"Image transforms:{image_transforms}")
     
     if int(os.environ.get('RANK', 0)) == 0:
         logger.info(pformat(cfg.to_dict()))
@@ -138,15 +139,23 @@ def train(cfg: TrainPipelineConfig):
     # dataset = LeRobotDataset(repo_id=cfg.dataset.repo_id, 
     #                          root=cfg.dataset.root,
     #                          image_transforms=image_transforms)
+    # Single Dataset
     dataset = make_dataset(cfg)
-    logger.info(f"Data load from:{cfg.dataset.root}")
-    logger.info(f"Dataset: {dataset}")
+    data_names = ["libero_spatial_no_noops_lerobot", "libero_goal_no_noops_lerobot",
+                  "libero_object_no_noops_lerobot", "libero_10_no_noops_lerobot"]
+    logger.info(f"Dataset names:{data_names}")
+    dataset = MultiSameDataset(cfg=cfg, 
+                               image_transforms=image_transforms,
+                               dataset_names=data_names)
+    
+    # logger.info(f"Data load from:{cfg.dataset.root}")
+    # logger.info(f"Dataset: {dataset}")
 
     # Policy setup
     logger.info("Creating policy...")
     if hasattr(cfg.policy, "tokenizer_max_length"):
         logger.info("Setting model's tokenizer_max_length to 100")
-        cfg.policy.tokenizer_max_length=100
+        cfg.policy.tokenizer_max_length=48
     logger.info("Still creating policy...")
     # print(cfg.policy.pretrained_path)
     policy = make_policy(
@@ -165,6 +174,7 @@ def train(cfg: TrainPipelineConfig):
     # Optimizer and scheduler
     logger.info("Creating optimizer and scheduler")
     optimizer, lr_scheduler = make_optimizer_and_scheduler(cfg, policy)
+    print(cfg.scheduler)
 
     # Logging setup (main process only)
     if int(os.environ.get('RANK', 0)) == 0:

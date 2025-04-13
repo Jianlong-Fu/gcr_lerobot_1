@@ -99,7 +99,9 @@ def create_stats_buffers(
                     buffer["min"].data = stats[key]["min"].clone().to(dtype=torch.float32)
                     buffer["max"].data = stats[key]["max"].clone().to(dtype=torch.float32)
             else:
+                
                 type_ = type(stats[key]["mean"])
+                # print(stats[key]["mean"], type_)
                 raise ValueError(f"np.ndarray or torch.Tensor expected, but type is '{type_}' instead.")
 
         stats_buffers[key] = buffer
@@ -144,6 +146,7 @@ class Normalize(nn.Module):
         self.features = features
         self.norm_map = norm_map
         self.stats = stats
+        # print(features, norm_map, stats)
         stats_buffers = create_stats_buffers(features, norm_map, stats)
         print(f"stats_buffers: {stats_buffers}")
         for key, buffer in stats_buffers.items():

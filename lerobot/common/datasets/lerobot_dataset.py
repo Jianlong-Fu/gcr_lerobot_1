@@ -43,7 +43,7 @@ from lerobot.common.constants import HF_LEROBOT_HOME
 from lerobot.common.datasets.oxe_configs import OXE_DATASET_CONFIGS
 from lerobot.common.datasets.mixtures import OXE_NAMED_MIXTURES
 # from lerobot.common.datasets.factory import resolve_delta_timestamps
-from lerobot.common.datasets.compute_stats import aggregate_stats, compute_episode_stats, aggregate_multi_stats
+from lerobot.common.datasets.compute_stats import aggregate_stats, compute_episode_stats, aggregate_multi_stats, aggregate_same_stats
 from lerobot.common.datasets.transforms import ImageTransforms
 from lerobot.common.datasets.image_writer import AsyncImageWriter, write_image
 from lerobot.common.datasets.utils import (
@@ -1308,6 +1308,66 @@ class MultiLeRobotDataset(torch.utils.data.Dataset):
             f")"
         )
 
+class MultiSameDataset(torch.utils.data.Dataset):
+    def __init__(self, cfg, image_transforms, dataset_names = None):
+        super().__init__()
+        self.episodes = None
+        parent_dir = "/mnt/wangxiaofa/robot_dataset/lerobot-format/"
+        # parent_dir = "/Data/lerobot_data/simulated"
+        self.datasets = []
+        meta_features = None
+        episode_count = 0
+        for d_name in dataset_names:
+            data_root = os.path.join(parent_dir, d_name)
+            repo_id = f"bulldog-{d_name}" # any
+            ds_meta = LeRobotDatasetMetadata(repo_id, root=data_root)
+            if meta_features == None:
+                meta_features = ds_meta.features
+            delta_timestamps = resolve_delta_timestamps(cfg.policy, ds_meta)
+            dataset = LeRobotDataset(
+                repo_id, 
+                root=data_root,
+                delta_timestamps=delta_timestamps,
+                image_transforms=image_transforms,
+                video_backend=cfg.dataset.video_backend,
+                revision=cfg.dataset.revision,
+            )
+            episode_this_dataset = dataset.num_episodes
+            episode_count += episode_this_dataset
+            self.datasets.append(dataset)
+
+        self.dataset = ConcatDataset(self.datasets)
+        self.num_episodes = episode_count
+        self.stats = aggregate_same_stats(self.datasets)
+        print(self.stats, meta_features)
+        self.meta = LeRobotDatasetMetadata.create_with_stats_feats(stats=self.stats, features=meta_features) # Note: I added a class function
+        self.meta.repo_id = "Any"
+    
+    def __len__(self):
+        return len(self.dataset)
+        # return self.dataset_len
+    
+    @property
+    def num_frames(self) -> int:
+        """Number of frames in selected episodes."""
+        return len(self.dataset) if self.dataset is not None else self.meta.total_frames
+        # return self.dataset_len if self.dataset_len is not None else self.meta.total_frames
+
+    @property
+    def features(self) -> dict[str, dict]:
+        return self.meta.features
+
+    @property
+    def hf_features(self) -> datasets.Features:
+        """Features of the hf_dataset."""
+        if self.dataset is not None:
+            return self.datasets[0].features
+        else:
+            return get_hf_features_from_features(self.features)
+    
+    def __getitem__(self, index):
+        item = self.dataset[index]
+        return item 
 
 class MultiDatasetforDistTraining(torch.utils.data.Dataset):
     def __init__(self, cfg, image_transforms, seed: int = 1000, data_mix: str = "toy", vla2root_json: str = None, banlance_weight=True):
