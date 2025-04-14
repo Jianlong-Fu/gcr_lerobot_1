@@ -59,19 +59,19 @@ class PI0Config(PreTrainedConfig):
     # Finetuning settings
     # freeze_vision_encoder: bool = True
     freeze_vision_encoder: bool = True
-    train_expert_only: bool = False
+    train_expert_only: bool = True
     train_state_proj: bool = True
 
     # Training presets
-    optimizer_lr: float = 1e-4
+    optimizer_lr: float = 2e-5
     optimizer_betas: tuple[float, float] = (0.9, 0.95)
     optimizer_eps: float = 1e-8
     optimizer_weight_decay: float = 1e-10
 
-    scheduler_warmup_steps: int = 500 # total steps // gradient_acc_size
+    scheduler_warmup_steps: int = 250 # total steps // gradient_acc_size
     # scheduler_warmup_steps: int = 3_000
     # -1 denotes keep unchanged
-    scheduler_decay_steps: int = 15_000 # total steps // gradient_acc_size
+    scheduler_decay_steps: int = 7_500 # total steps // gradient_acc_size
     scheduler_decay_lr: float = 2.5e-6
 
     # TODO: Add EMA

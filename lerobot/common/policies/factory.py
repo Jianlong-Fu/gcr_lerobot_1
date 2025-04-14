@@ -160,14 +160,15 @@ def make_policy(
         #     "model.action_out_proj", "model.action_time_mlp_in",
         #     "model.action_time_mlp_out"
         # ]
-        unfit_weight_key = []
+        # unfit_weight_key = []
 
-        # 过滤掉含 "gemma_expert" 或 unfit_weight_key 中任意关键字的权重
-        filtered_weights = {
-            k: v for k, v in weights.items()
-            if "gemma_expert" not in k and not any(key in k for key in unfit_weight_key)
-        }
-        policy.load_state_dict(filtered_weights, strict=False)
+        # # 过滤掉含 "gemma_expert" 或 unfit_weight_key 中任意关键字的权重
+        # filtered_weights = {
+        #     k: v for k, v in weights.items()
+        #     if "gemma_expert" not in k and not any(key in k for key in unfit_weight_key)
+        # }
+        # policy.load_state_dict(filtered_weights, strict=False)
+        policy.load_state_dict(weights, strict=False)
         print(f"Load pt weights from:{weight_pt_path}")
     
     # policy.to(device)
