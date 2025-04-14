@@ -141,15 +141,15 @@ def train(cfg: TrainPipelineConfig):
     #                          image_transforms=image_transforms)
     # Single Dataset
     dataset = make_dataset(cfg)
-    data_names = ["libero_spatial_no_noops_lerobot", "libero_goal_no_noops_lerobot",
-                  "libero_object_no_noops_lerobot", "libero_10_no_noops_lerobot"]
-    logger.info(f"Dataset names:{data_names}")
-    dataset = MultiSameDataset(cfg=cfg, 
-                               image_transforms=image_transforms,
-                               dataset_names=data_names)
+    # data_names = ["libero_spatial_no_noops_lerobot", "libero_goal_no_noops_lerobot",
+    #               "libero_object_no_noops_lerobot", "libero_10_no_noops_lerobot"]
+    # logger.info(f"Dataset names:{data_names}")
+    # dataset = MultiSameDataset(cfg=cfg, 
+    #                            image_transforms=image_transforms,
+    #                            dataset_names=data_names)
     
-    # logger.info(f"Data load from:{cfg.dataset.root}")
-    # logger.info(f"Dataset: {dataset}")
+    logger.info(f"Data load from:{cfg.dataset.root}")
+    logger.info(f"Dataset: {dataset}")
 
     # Policy setup
     logger.info("Creating policy...")
