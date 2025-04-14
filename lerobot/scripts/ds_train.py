@@ -147,10 +147,11 @@ def update_policy(
 
     # 收集分布式指标
     loss_value = accelerator.gather(loss).mean().item()
-    grad_norm = accelerator.clip_grad_norm_(policy.parameters(), 1.0)
+    grad_norm = accelerator.clip_grad_norm_(policy.parameters(), grad_clip_norm)
     
     train_metrics.loss = loss_value
-    train_metrics.grad_norm = grad_norm.item().to(dtype=torch.float32) if grad_norm is not None else 0.0
+    train_metrics.grad_norm = grad_norm.item()
+    # train_metrics.grad_norm = grad_norm.item().to(dtype=torch.float32) if grad_norm is not None else 0.0
     train_metrics.lr = optimizer.param_groups[0]["lr"]
     train_metrics.update_s = time.perf_counter() - start_time
     return train_metrics, output_dict
@@ -478,6 +479,5 @@ def train(cfg: TrainPipelineConfig):
 
 
 if __name__ == "__main__":
-
-    os.environ['WANDB_API_KEY'] = '7f1c1acfe477063902c617b0e8ef24d2b76ed447'
+    os.environ['WANDB_API_KEY'] = '9e1c3ac77856b8ebb5573c4e1e250c84aabfb904'
     train()
