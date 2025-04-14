@@ -63,16 +63,16 @@ class PI0Config(PreTrainedConfig):
     train_state_proj: bool = True
 
     # Training presets
-    optimizer_lr: float = 1e-4
+    optimizer_lr: float = 3e-6
     optimizer_betas: tuple[float, float] = (0.9, 0.95)
     optimizer_eps: float = 1e-8
     optimizer_weight_decay: float = 1e-10
 
-    scheduler_warmup_steps: int = 1000 # total steps // gradient_acc_size
+    scheduler_warmup_steps: int = 250 # total steps // gradient_acc_size
     # scheduler_warmup_steps: int = 3_000
     # -1 denotes keep unchanged
-    scheduler_decay_steps: int = 30_000 # total steps // gradient_acc_size
-    scheduler_decay_lr: float = 2.5e-6
+    scheduler_decay_steps: int = 7_500 # total steps // gradient_acc_size
+    scheduler_decay_lr: float = 1e-6
 
     # TODO: Add EMA
 
