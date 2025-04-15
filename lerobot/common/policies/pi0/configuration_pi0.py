@@ -60,7 +60,7 @@ class PI0Config(PreTrainedConfig):
     # freeze_vision_encoder: bool = True
     freeze_vision_encoder: bool = True
     train_expert_only: bool = True
-    train_state_proj: bool = True
+    train_state_proj: bool = False
 
     # Training presets
     optimizer_lr: float = 3e-6
