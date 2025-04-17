@@ -548,6 +548,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
         self.root = Path(root) if root else HF_LEROBOT_HOME / repo_id
         self.image_transforms = image_transforms
         self.wrist_image_transforms = wrist_image_transforms
+        print(self.image_transforms, self.wrist_image_transforms)
         self.delta_timestamps = delta_timestamps
         self.episodes = episodes
         self.tolerance_s = tolerance_s
@@ -839,7 +840,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
                 if "wrist" not in cam:
                     item[cam] = self.image_transforms(item[cam])
                 else:
-                    print(self.wrist_image_transforms, cam)
+                    print(f"Current:{self.wrist_image_transforms}")
                     item[cam] = self.wrist_image_transforms(item[cam])
 
         # Add task as a string
