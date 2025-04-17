@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 from lerobot.common import (
     policies,  # noqa: F401
 )
-from lerobot.common.datasets.transforms import ImageTransformsConfig
+from lerobot.common.datasets.transforms import ImageTransformsConfig, WristImageTransformsConfig
 
 
 @dataclass
@@ -33,6 +33,7 @@ class DatasetConfig:
     root: str | None = None
     episodes: list[int] | None = None
     image_transforms: ImageTransformsConfig = field(default_factory=ImageTransformsConfig)
+    wrist_image_transforms: WristImageTransformsConfig = field(default_factory=WristImageTransformsConfig)
     revision: str | None = None
     use_imagenet_stats: bool = True
     video_backend: str = "pyav"

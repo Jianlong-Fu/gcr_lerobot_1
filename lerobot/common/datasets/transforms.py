@@ -175,7 +175,7 @@ class ImageTransformsConfig:
     max_num_transforms: int = 3
     # By default, transforms are applied in Torchvision's suggested order (shown below).
     # Set this to True to apply them in a random order.
-    random_order: bool = False
+    random_order: bool = True
     img_size: int = 224
     tfs: dict[str, ImageTransformConfig] = field(
         default_factory=lambda: {
@@ -204,16 +204,74 @@ class ImageTransformsConfig:
                 type="SharpnessJitter",
                 kwargs={"sharpness": (0.5, 1.5)},
             ),
-            "rotate": ImageTransformConfig(
-                weight=1.0,
-                type="RandomRotate",
-                kwargs={"degrees": (-5, 5)},
-            ),
             "crop_resize":ImageTransformConfig(
                 weight=1.0,
                 type="RandomResizedCrop",
                 kwargs={"size": (256, 256), "scale" : (0.9, 0.95), "ratio": (1.0, 1.0)},
             ),
+            "rotate": ImageTransformConfig(
+                weight=1.0,
+                type="RandomRotate",
+                kwargs={"degrees": (-5, 5)},
+            )
+        }
+    )
+
+@dataclass
+class WristImageTransformsConfig:
+    """
+    These transforms are all using standard torchvision.transforms.v2
+    You can find out how these transformations affect images here:
+    https://pytorch.org/vision/0.18/auto_examples/transforms/plot_transforms_illustrations.html
+    We use a custom RandomSubsetApply container to sample them.
+    """
+
+    # Set this flag to `true` to enable transforms during training
+    enable: bool = True
+    # This is the maximum number of transforms (sampled from these below) that will be applied to each frame.
+    # It's an integer in the interval [1, number_of_available_transforms].
+    max_num_transforms: int = 3
+    # By default, transforms are applied in Torchvision's suggested order (shown below).
+    # Set this to True to apply them in a random order.
+    random_order: bool = True
+
+    tfs: dict[str, ImageTransformConfig] = field(
+        default_factory=lambda: {
+            "brightness": ImageTransformConfig(
+                weight=1.0,
+                type="ColorJitter",
+                kwargs={"brightness": (0.8, 1.2)},
+            ),
+            "contrast": ImageTransformConfig(
+                weight=1.0,
+                type="ColorJitter",
+                kwargs={"contrast": (0.8, 1.2)},
+            ),
+            "saturation": ImageTransformConfig(
+                weight=1.0,
+                type="ColorJitter",
+                kwargs={"saturation": (0.5, 1.5)},
+            ),
+            "hue": ImageTransformConfig(
+                weight=1.0,
+                type="ColorJitter",
+                kwargs={"hue": (-0.05, 0.05)},
+            ),
+            "sharpness": ImageTransformConfig(
+                weight=1.0,
+                type="SharpnessJitter",
+                kwargs={"sharpness": (0.5, 1.5)},
+            ),
+            # "crop_resize":ImageTransformConfig(
+            #     weight=1.0,
+            #     type="RandomResizedCrop",
+            #     kwargs={"size": (256, 256), "scale" : (0.9, 0.95), "ratio": (1.0, 1.0)},
+            # ),
+            # "rotate": ImageTransformConfig(
+            #     weight=1.0,
+            #     type="RandomRotate",
+            #     kwargs={"degrees": (-5, 5)},
+            # )
         }
     )
 
@@ -231,6 +289,8 @@ def make_transform_from_config(cfg: ImageTransformConfig):
         return v2.RandomRotation(**cfg.kwargs)
     elif cfg.type == "RandomResizedCrop":
         return v2.RandomResizedCrop(**cfg.kwargs)
+    elif cfg.type == "RandomCrop":
+        return v2.RandomCrop(**cfg.kwargs)
     else:
         raise ValueError(f"Transform '{cfg.type}' is not valid.")
 
@@ -264,6 +324,6 @@ class ImageTransforms(Transform):
                 n_subset=n_subset,
                 random_order=cfg.random_order,
             )
-
+            
     def forward(self, *inputs: Any) -> Any:
         return self.tf(*inputs)
