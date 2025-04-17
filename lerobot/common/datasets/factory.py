@@ -64,6 +64,7 @@ def resolve_delta_timestamps(
     if len(delta_timestamps) == 0:
         delta_timestamps = None
 
+    # print(delta_timestamps)
     return delta_timestamps
 
 
@@ -83,7 +84,13 @@ def make_dataset(cfg: TrainPipelineConfig) -> LeRobotDataset | MultiLeRobotDatas
     image_transforms = (
         ImageTransforms(cfg.dataset.image_transforms) if cfg.dataset.image_transforms.enable else None
     )
+    wrist_image_transforms = (
+        ImageTransforms(cfg.dataset.wrist_image_transforms)
+    )
+    print("Primary")
     print(image_transforms)
+    print("Wrist")
+    print(wrist_image_transforms)
 
     if isinstance(cfg.dataset.repo_id, str):
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Loading dataset metadata for the first time.")
@@ -99,6 +106,7 @@ def make_dataset(cfg: TrainPipelineConfig) -> LeRobotDataset | MultiLeRobotDatas
             episodes=cfg.dataset.episodes,
             delta_timestamps=delta_timestamps,
             image_transforms=image_transforms,
+            wrist_image_transforms=wrist_image_transforms,
             revision=cfg.dataset.revision,
             video_backend=cfg.dataset.video_backend,
         )
