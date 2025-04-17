@@ -261,7 +261,7 @@ class WristImageTransformsConfig:
                 weight=1.0,
                 type="SharpnessJitter",
                 kwargs={"sharpness": (0.5, 1.5)},
-            ),
+            )
             # "crop_resize":ImageTransformConfig(
             #     weight=1.0,
             #     type="RandomResizedCrop",
