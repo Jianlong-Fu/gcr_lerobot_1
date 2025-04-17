@@ -9,4 +9,5 @@ python lerobot/scripts/dps_train.py \
     --log_dir="/mnt/wangxiaofa/logs" \
     --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0417-ft-libero-goal-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1k-w-sep-img-aug-random-order-2rd" \
     --steps=120_000 \
-    --dataset.image_transforms.enable=true
+    --dataset.image_transforms.enable=true \
+    --dataset.wrist_image_transforms.enable=true

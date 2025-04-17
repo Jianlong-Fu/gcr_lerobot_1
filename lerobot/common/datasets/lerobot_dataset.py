@@ -839,6 +839,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
                 if "wrist" not in cam:
                     item[cam] = self.image_transforms(item[cam])
                 else:
+                    print(self.wrist_image_transforms, cam)
                     item[cam] = self.wrist_image_transforms(item[cam])
 
         # Add task as a string
