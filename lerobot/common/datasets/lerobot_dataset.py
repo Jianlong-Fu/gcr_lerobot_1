@@ -1314,7 +1314,7 @@ class MultiLeRobotDataset(torch.utils.data.Dataset):
         )
 
 class MultiSameDataset(torch.utils.data.Dataset):
-    def __init__(self, cfg, image_transforms, dataset_names = None):
+    def __init__(self, cfg, image_transforms, wrist_image_transforms, dataset_names = None):
         super().__init__()
         self.episodes = None
         parent_dir = "/mnt/wangxiaofa/robot_dataset/lerobot-format/"
@@ -1334,6 +1334,7 @@ class MultiSameDataset(torch.utils.data.Dataset):
                 root=data_root,
                 delta_timestamps=delta_timestamps,
                 image_transforms=image_transforms,
+                wrist_image_transforms=wrist_image_transforms,
                 video_backend=cfg.dataset.video_backend,
                 revision=cfg.dataset.revision,
             )
