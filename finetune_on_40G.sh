@@ -5,9 +5,9 @@ python lerobot/scripts/dps_train.py \
     --dataset.repo_id="any/simulted" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="pi0-04-17-ft-libero-goal-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1k-w-sep-img-aug-random-order-2rd" \
+    --job_name="pi0-04-18-ft-libero-all-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1k-w-sep-img-aug-random-order-2rd" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0417-ft-libero-goal-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1k-w-sep-img-aug-random-order-2rd" \
-    --steps=120_000 \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0418-ft-libero-all-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1k-w-sep-img-aug-random-order-2rd" \
+    --steps=300_000 \
     --dataset.image_transforms.enable=true \
     --dataset.wrist_image_transforms.enable=true
