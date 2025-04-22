@@ -1,13 +1,13 @@
 python lerobot/scripts/dps_train.py \
     --deepspeed="./ds_zero2_40G.json" \
     --policy.type="pi0" \
-    --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_goal_no_noops_lerobot" \
+    --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format/vlabench_ft" \
     --dataset.repo_id="any/simulted" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="pi0-04-18-ft-libero-all-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1k-w-sep-img-aug-random-order-2rd" \
+    --job_name="pi0-04-22-vlabench-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-0.5k-w-sep-img-aug-random-order-2rd" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0418-ft-libero-all-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1k-w-sep-img-aug-random-order-2rd" \
-    --steps=300_000 \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0422-ft-vlabench-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-0.5k-w-sep-img-aug-random-order-2rd" \
+    --steps=60_000 \
     --dataset.image_transforms.enable=true \
     --dataset.wrist_image_transforms.enable=true
