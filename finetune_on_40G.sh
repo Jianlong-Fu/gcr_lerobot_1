@@ -5,9 +5,9 @@ python lerobot/scripts/dps_train.py \
     --dataset.repo_id="any/simulted" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="pi0-04-23-simpler_bridge-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-0.5k-w-sep-img-aug-random-order-2rd" \
+    --job_name="pi0-04-24-simpler_bridge-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1.5k-w-sep-img-aug-random-order-1st" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0423-ft-simpler_bridge-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-0.5k-w-sep-img-aug-random-order-2rd" \
-    --steps=60_000 \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0424-ft-simpler_bridge-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1.5k-w-sep-img-aug-random-order-1st" \
+    --steps=180_000 \
     --dataset.image_transforms.enable=true \
     --dataset.wrist_image_transforms.enable=true

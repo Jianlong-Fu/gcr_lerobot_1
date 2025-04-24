@@ -68,10 +68,10 @@ class PI0Config(PreTrainedConfig):
     optimizer_eps: float = 1e-8
     optimizer_weight_decay: float = 1e-10
 
-    scheduler_warmup_steps: int = 500 # total steps // gradient_acc_size
+    scheduler_warmup_steps: int = 1500 # total steps // gradient_acc_size
     # scheduler_warmup_steps: int = 3_000
     # -1 denotes keep unchanged
-    scheduler_decay_steps: int = 15_000 # total steps // gradient_acc_size
+    scheduler_decay_steps: int = 45_000 # total steps // gradient_acc_size
     scheduler_decay_lr: float = 2.5e-6
 
     # TODO: Add EMA
