@@ -441,6 +441,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
         force_cache_sync: bool = False,
         download_videos: bool = True,
         video_backend: str | None = None,
+        keep_img_keys: str | None = None
     ):
         """
         2 modes are available for instantiating this class, depending on 2 different use cases:
@@ -556,6 +557,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
         self.revision = revision if revision else CODEBASE_VERSION
         self.video_backend = video_backend if video_backend else "pyav"
         self.delta_indices = None
+        self.keep_img_keys = keep_img_keys
 
         # Unused attributes
         self.image_writer = None
@@ -863,9 +865,13 @@ class LeRobotDataset(torch.utils.data.Dataset):
             item = {**video_frames, **item}
 
         if self.image_transforms is not None:
-            image_keys = self.meta.camera_keys
+            if self.keep_img_keys:
+                image_keys = self.keep_img_keys
+            else:
+                image_keys = self.meta.camera_keys
             for cam in image_keys:
                 if "wrist" not in cam:
+                    # if self.keep_img_keys and cam in self.keep_img_keys:
                     item[cam] = self.image_transforms(item[cam])
                 else:
                     # print(f"Current:{self.wrist_image_transforms}")
