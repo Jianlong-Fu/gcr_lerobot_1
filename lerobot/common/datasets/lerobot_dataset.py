@@ -879,7 +879,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
                 item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
 
         if self.keep_img_keys:
-            for cam in image_keys:
+            for cam in self.meta.camera_keys:
                 if cam not in self.keep_img_keys:
                     del item[cam]
                     print(cam)
