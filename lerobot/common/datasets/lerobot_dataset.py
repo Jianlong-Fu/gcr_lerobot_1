@@ -878,6 +878,12 @@ class LeRobotDataset(torch.utils.data.Dataset):
                     item[cam] = self.wrist_image_transforms(item[cam])
                 item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
 
+        if self.keep_img_keys:
+            for cam in image_keys:
+                if cam not in self.keep_img_keys:
+                    del item[cam]
+                    print(cam)
+        print(item.keys())
         # Add task as a string
         task_idx = item["task_index"].item()
         item["task"] = self.meta.tasks[task_idx]
