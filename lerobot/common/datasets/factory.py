@@ -85,7 +85,7 @@ def make_dataset(cfg: TrainPipelineConfig) -> LeRobotDataset | MultiLeRobotDatas
         ImageTransforms(cfg.dataset.image_transforms) if cfg.dataset.image_transforms.enable else None
     )
     wrist_image_transforms = (
-        ImageTransforms(cfg.dataset.wrist_image_transforms)
+        ImageTransforms(cfg.dataset.wrist_image_transforms) if cfg.dataset.image_transforms.enable else None
     )
     print("Primary")
     print(image_transforms)
@@ -109,7 +109,7 @@ def make_dataset(cfg: TrainPipelineConfig) -> LeRobotDataset | MultiLeRobotDatas
             wrist_image_transforms=wrist_image_transforms,
             revision=cfg.dataset.revision,
             video_backend=cfg.dataset.video_backend,
-            keep_img_keys=["observation.images.image_0"]
+            # keep_img_keys=["observation.images.image_0"]
         )
     else:
         raise NotImplementedError("The MultiLeRobotDataset isn't supported for now.")

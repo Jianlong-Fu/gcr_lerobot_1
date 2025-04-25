@@ -885,6 +885,9 @@ class LeRobotDataset(torch.utils.data.Dataset):
                 else:
                     item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
                     # print(cam)
+        else:
+            for cam in self.meta.camera_keys:
+                item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
         # print(item.keys())
         # Add task as a string
         task_idx = item["task_index"].item()
