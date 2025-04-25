@@ -160,7 +160,7 @@ def train(cfg: TrainPipelineConfig):
     logger.info("Creating policy...")
     if hasattr(cfg.policy, "tokenizer_max_length"):
         logger.info("Setting model's tokenizer_max_length to 100")
-        cfg.policy.tokenizer_max_length=48
+        cfg.policy.tokenizer_max_length=100
     logger.info("Still creating policy...")
     # print(cfg.policy.pretrained_path)
     policy = make_policy(
