@@ -876,7 +876,8 @@ class LeRobotDataset(torch.utils.data.Dataset):
                 else:
                     # print(f"Current:{self.wrist_image_transforms}")
                     item[cam] = self.wrist_image_transforms(item[cam])
-                item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
+                # not multi-view not need
+                # item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
 
         if self.keep_img_keys:
             for cam in self.meta.camera_keys:
@@ -885,9 +886,11 @@ class LeRobotDataset(torch.utils.data.Dataset):
                 else:
                     item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
                     # print(cam)
-        else:
-            for cam in self.meta.camera_keys:
-                item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
+        # not multi-view not need
+        # else:
+        #     for cam in self.meta.camera_keys:
+        #         item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
+        
         # print(item.keys())
         # Add task as a string
         task_idx = item["task_index"].item()
