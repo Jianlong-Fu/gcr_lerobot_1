@@ -1,5 +1,5 @@
 python lerobot/scripts/dps_train.py \
-    --deepspeed="./ds_zero2_40G.json" \
+    --deepspeed="./ds_zero2.json" \
     --policy.type="pi0" \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format/simpler_fractal" \
     --dataset.repo_id="any/simulted" \
