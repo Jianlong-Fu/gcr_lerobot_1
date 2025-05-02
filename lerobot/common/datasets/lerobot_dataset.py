@@ -863,30 +863,37 @@ class LeRobotDataset(torch.utils.data.Dataset):
             query_timestamps = self._get_query_timestamps(current_ts, query_indices)
             video_frames = self._query_videos(query_timestamps, ep_idx)
             item = {**video_frames, **item}
-
+        
         if self.image_transforms is not None:
-            if self.keep_img_keys:
-                image_keys = self.keep_img_keys
-            else:
-                image_keys = self.meta.camera_keys
+            image_keys = self.meta.camera_keys
             for cam in image_keys:
-                if "wrist" not in cam:
-                    # if self.keep_img_keys and cam in self.keep_img_keys:
-                    item[cam] = self.image_transforms(item[cam])
-                else:
-                    # print(f"Current:{self.wrist_image_transforms}")
-                    item[cam] = self.wrist_image_transforms(item[cam])
-                # not multi-view not need
-                # item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
+                item[cam] = self.image_transforms(item[cam])
+                item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
+        
+        # our
+        # if self.image_transforms is not None:
+        #     if self.keep_img_keys:
+        #         image_keys = self.keep_img_keys
+        #     else:
+        #         image_keys = self.meta.camera_keys
+        #     for cam in image_keys:
+        #         if "wrist" not in cam:
+        #             # if self.keep_img_keys and cam in self.keep_img_keys:
+        #             item[cam] = self.image_transforms(item[cam])
+        #         else:
+        #             # print(f"Current:{self.wrist_image_transforms}")
+        #             item[cam] = self.wrist_image_transforms(item[cam])
+        #         # not multi-view not need
+        #         # item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
 
-        if self.keep_img_keys:
-            for cam in self.meta.camera_keys:
-                if cam not in self.keep_img_keys:
-                    del item[cam]
-                else:
-                    item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
-                    # print(cam)
-        # not multi-view not need
+        # if self.keep_img_keys:
+        #     for cam in self.meta.camera_keys:
+        #         if cam not in self.keep_img_keys:
+        #             del item[cam]
+        #         else:
+        #             item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
+        #             # print(cam)
+        # # not multi-view not need
         # else:
         #     for cam in self.meta.camera_keys:
         #         item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
