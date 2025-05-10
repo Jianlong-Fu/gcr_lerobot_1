@@ -175,7 +175,7 @@ class ImageTransformsConfig:
     max_num_transforms: int = 3
     # By default, transforms are applied in Torchvision's suggested order (shown below).
     # Set this to True to apply them in a random order.
-    random_order: bool = False
+    random_order: bool = True
     img_size: int = 224
     tfs: dict[str, ImageTransformConfig] = field(
         default_factory=lambda: {
@@ -204,11 +204,11 @@ class ImageTransformsConfig:
                 type="SharpnessJitter",
                 kwargs={"sharpness": (0.5, 1.5)},
             ),
-            # "crop_resize":ImageTransformConfig(
-            #     weight=1.0,
-            #     type="RandomResizedCrop",
-            #     kwargs={"size": (256, 256), "scale" : (0.9, 0.95), "ratio": (1.0, 1.0)},
-            # ),
+            "crop_resize":ImageTransformConfig(
+                weight=1.0,
+                type="RandomResizedCrop",
+                kwargs={"size": (200, 200), "scale" : (0.9, 0.95), "ratio": (1.0, 1.0)},
+            ),
             "rotate": ImageTransformConfig(
                 weight=1.0,
                 type="RandomRotate",
