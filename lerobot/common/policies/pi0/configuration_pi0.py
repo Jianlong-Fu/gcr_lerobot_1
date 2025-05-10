@@ -71,7 +71,7 @@ class PI0Config(PreTrainedConfig):
     scheduler_warmup_steps: int = 4000 # total steps // gradient_acc_size (300K, 2.5K)
     # scheduler_warmup_steps: int = 3_000
     # -1 denotes keep unchanged
-    scheduler_decay_steps: int = 125_000 # total steps // gradient_acc_size
+    scheduler_decay_steps: int = 112_500 # total steps // gradient_acc_size
     scheduler_decay_lr: float = 2.5e-6
 
     # TODO: Add EMA
