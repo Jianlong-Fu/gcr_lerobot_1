@@ -1,13 +1,13 @@
 python lerobot/scripts/dps_train.py \
-    --deepspeed="./ds_zero2_40G.json" \
+    --deepspeed="./ds_zero2.json" \
     --policy.type="pi0" \
-    --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format/calvin_task_ABC_D_training" \
+    --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format/libero" \
     --dataset.repo_id="any/simulted" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="pi0-05-10-ft-calvinABC_D-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-4k-w-img-aug-no-random-order-and-crop-1st" \
+    --job_name="pi0-scratch-05-16-ft-libero-bs-16-2gpu-gra-acc-4-with-lr-decay-warm-2.5k-w-img-aug-1st" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0510-ft-calvinABC_D-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-4k-w-img-aug-1st" \
-    --steps=450_000 \
+    --output_dir="/mnt/wangxiaofa/pi0-scratch-ft-simulated/0516-ft-libero-bs-16-2gpu-gra-acc-4-with-lr-decay-warm-2.5k-w-img-aug-1st" \
+    --steps=300_000 \
     --dataset.image_transforms.enable=true \
     --dataset.wrist_image_transforms.enable=true
