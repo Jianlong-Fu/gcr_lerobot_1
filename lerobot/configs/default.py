@@ -37,6 +37,7 @@ class DatasetConfig:
     revision: str | None = None
     use_imagenet_stats: bool = True
     video_backend: str = "pyav"
+    data_mix: str = ""
 
 
 @dataclass

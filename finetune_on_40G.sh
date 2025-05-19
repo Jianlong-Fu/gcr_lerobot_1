@@ -9,5 +9,5 @@ python lerobot/scripts/dps_train.py \
     --job_name="pi0-scratch-with-paligemma-weight-05-19-ft-simpler_bridge-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1k-wo-img-aug-1st" \
     --log_dir="/mnt/wangxiaofa/logs" \
     --output_dir="/mnt/wangxiaofa/pi0-scratch-ft-simulated/0519-ft-simpler_bridge-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1k-wo-img-aug-1st" \
-    --steps=120_000 \
+    --steps=300_000 \
     --dataset.image_transforms.enable=false
