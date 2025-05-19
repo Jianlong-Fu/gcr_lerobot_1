@@ -1489,6 +1489,7 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         print(included_datasets, sample_weights)
         # get dataset and dataset length
         parent_dir = "/mnt/wangxiaofa/robot_dataset/lerobot-format/"
+        # parent_dir = cfg.dataset.root
         # parent_dir = "/data_16T/lerobot_openx/"
         self.datasets = []
         self.dataset_sizes = []
@@ -1640,7 +1641,8 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
                 item[f"observation.images.{new_key}"] = item[f"observation.images.{old_key}"]
                 exist_image = item[f"observation.images.{old_key}"]
                 # print(type(exist_image), exist_image.shape)
-                del item[f"observation.images.{old_key}"]
+                if old_key != new_key:
+                    del item[f"observation.images.{old_key}"]
             else:
                 # if missing, use zero
                 item[f"observation.images.{new_key}"] = torch.zeros_like(exist_image)
@@ -1650,6 +1652,7 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         for key in keys:
             if "images" in key and key not in self.new_obs_image_keys:
                 del item[key]
+        # print(item.keys(), self.new_obs_image_keys)
         if "episode_index" in item:
             item["source"] = f"{item['dataset_name']}_episode_id_{item['episode_index']}"
         elif "ep_idx" in item:
@@ -1661,6 +1664,7 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         # print(item["action"].shape)
         item["observation.state"] = self.pad_vector(item["observation.state"], self.max_state_dim)
         return item
+    
     @property
     def num_frames(self) -> int:
         """Number of frames in selected episodes."""

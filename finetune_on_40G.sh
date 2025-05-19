@@ -1,13 +1,13 @@
 python lerobot/scripts/dps_train.py \
-    --deepspeed="./ds_zero2.json" \
+    --deepspeed="./ds_zero2_40G.json" \
     --policy.type="pi0" \
-    --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format/libero" \
+    --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
     --dataset.repo_id="any/simulted" \
+    --dataset.data_mix="simpler_bridge" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="pi0-scratch-05-16-ft-libero-bs-16-2gpu-gra-acc-4-with-lr-decay-warm-2.5k-w-img-aug-1st" \
+    --job_name="pi0-scratch-with-paligemma-weight-05-19-ft-simpler_bridge-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1k-wo-img-aug-1st" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-scratch-ft-simulated/0516-ft-libero-bs-16-2gpu-gra-acc-4-with-lr-decay-warm-2.5k-w-img-aug-1st" \
-    --steps=300_000 \
-    --dataset.image_transforms.enable=true \
-    --dataset.wrist_image_transforms.enable=true
+    --output_dir="/mnt/wangxiaofa/pi0-scratch-ft-simulated/0519-ft-simpler_bridge-bs-4-8gpu-gra-acc-4-with-lr-decay-warm-1k-wo-img-aug-1st" \
+    --steps=120_000 \
+    --dataset.image_transforms.enable=false
