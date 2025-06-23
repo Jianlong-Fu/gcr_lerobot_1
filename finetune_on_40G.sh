@@ -3,11 +3,11 @@ python lerobot/scripts/dps_train.py \
     --policy.type="pi0" \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
     --dataset.repo_id="any/simulted" \
-    --dataset.data_mix="simpler_bridge" \
+    --dataset.data_mix="pizza" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="pi0-scratch-with-paligemma-weight-05-25-ft-simpler_bridge-v3-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wo-img-aug-1st" \
+    --job_name="06-23-pt-pi0-ft-pizza-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wo-img-aug-1st" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-scratch-ft-simulated/0525-ft-simpler_bridge-v3-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wo-img-aug-1st" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0623-ft-pizza-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wo-img-aug-1st" \
     --steps=300_000 \
     --dataset.image_transforms.enable=false

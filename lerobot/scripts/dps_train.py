@@ -130,11 +130,11 @@ def train(cfg: TrainPipelineConfig):
         set_seed(cfg.seed + int(os.environ.get('RANK', 0)))
 
     # Dataset setup
-    dataset = MultiDatasetforDistTraining(cfg=cfg, image_transforms=image_transforms, 
-                           seed=cfg.seed, 
-                           # data_mix="oxe_magic_soup_plus",
-                           data_mix=cfg.dataset.data_mix,
-                           vla2root_json="vla2root.json")
+    # dataset = MultiDatasetforDistTraining(cfg=cfg, image_transforms=image_transforms, 
+    #                        seed=cfg.seed, 
+    #                        # data_mix="oxe_magic_soup_plus",
+    #                        data_mix=cfg.dataset.data_mix,
+    #                        vla2root_json="vla2root.json")
     # for finetuning on simuleted enviroments
     # data_root = "/mnt/wangxiaofa/robot_dataset/lerobot-format/libero_spatial_no_noops_lerobot"
     # dataset = LeRobotDataset(repo_id=cfg.dataset.repo_id, 
@@ -144,11 +144,12 @@ def train(cfg: TrainPipelineConfig):
     # dataset = make_dataset(cfg)
     # data_names = ["libero_spatial_no_noops_lerobot", "libero_goal_no_noops_lerobot",
     #               "libero_object_no_noops_lerobot", "libero_10_no_noops_lerobot"]
+    data_names = ["pizza_v3"]
     # logger.info(f"Dataset names:{data_names}")
-    # dataset = MultiSameDataset(cfg=cfg, 
-    #                            image_transforms=image_transforms,
-    #                            wrist_image_transforms=wrist_image_transforms,
-    #                            dataset_names=data_names)
+    dataset = MultiSameDataset(cfg=cfg, 
+                               image_transforms=image_transforms,
+                            #    wrist_image_transforms=wrist_image_transforms,
+                               dataset_names=data_names)
     
     logger.info(f"Data load from:{cfg.dataset.root}")
     logger.info(f"Dataset: {dataset}")

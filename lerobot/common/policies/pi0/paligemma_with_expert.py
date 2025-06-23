@@ -163,13 +163,13 @@ class PaliGemmaWithExpertModel(PreTrainedModel):
     def __init__(self, config: PaliGemmaWithExpertConfig):
         super().__init__(config=config)
         self.config = config
-        init_path = "/mnt/wangxiaofa/RDT_module_params/paligemma-3b-pt-224/"
-        # init_path = "/Data/lzl/huggingface/paligemma-3b-pt-224"
-        if init_path:
-            self.paligemma = PaliGemmaForConditionalGeneration.from_pretrained(init_path)
-            print(f"load paligemma from {init_path}")
-        else:
-            self.paligemma = PaliGemmaForConditionalGeneration(config=config.paligemma_config)
+        # init_path = "/mnt/wangxiaofa/RDT_module_params/paligemma-3b-pt-224/"
+        # # init_path = "/Data/lzl/huggingface/paligemma-3b-pt-224"
+        # if init_path:
+        #     self.paligemma = PaliGemmaForConditionalGeneration.from_pretrained(init_path)
+        #     print(f"load paligemma from {init_path}")
+        # else:
+        self.paligemma = PaliGemmaForConditionalGeneration(config=config.paligemma_config)
         self.gemma_expert = GemmaForCausalLM(config=config.gemma_expert_config)
         # Remove unused embed_tokens
         self.gemma_expert.model.embed_tokens = None

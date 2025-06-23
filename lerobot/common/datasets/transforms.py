@@ -204,16 +204,16 @@ class ImageTransformsConfig:
                 type="SharpnessJitter",
                 kwargs={"sharpness": (0.5, 1.5)},
             ),
-            "crop_resize":ImageTransformConfig(
-                weight=1.0,
-                type="RandomResizedCrop",
-                kwargs={"size": (200, 200), "scale" : (0.9, 0.95), "ratio": (1.0, 1.0)},
-            ),
-            "rotate": ImageTransformConfig(
-                weight=1.0,
-                type="RandomRotate",
-                kwargs={"degrees": (-5, 5)},
-            )
+            # "crop_resize":ImageTransformConfig(
+            #     weight=1.0,
+            #     type="RandomResizedCrop",
+            #     kwargs={"size": (200, 200), "scale" : (0.9, 0.95), "ratio": (1.0, 1.0)},
+            # ),
+            # "rotate": ImageTransformConfig(
+            #     weight=1.0,
+            #     type="RandomRotate",
+            #     kwargs={"degrees": (-5, 5)},
+            # )
         }
     )
 
@@ -314,8 +314,8 @@ class ImageTransforms(Transform):
         n_subset = min(len(self.transforms), cfg.max_num_transforms)
         # self.base_tf = v2.Resize(size=(cfg.img_size, cfg.img_size))
         if n_subset == 0 or not cfg.enable:
-            self.tf = v2.Identity()
-            # self.tf = self.base_tf
+            # self.tf = v2.Identity()
+            self.tf = self.base_tf
         else:
             self.tf = RandomSubsetApply(
                 # base_transforms=self.base_tf,

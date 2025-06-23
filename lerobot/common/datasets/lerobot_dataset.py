@@ -867,15 +867,16 @@ class LeRobotDataset(torch.utils.data.Dataset):
         if self.image_transforms is not None:
             image_keys = self.meta.camera_keys
             for cam in image_keys:
-                if "primary" in cam:
-                    item[cam] = self.image_transforms(item[cam])
-                else:
-                    if self.wrist_image_transforms is not None:
-                        item[cam] = self.wrist_image_transforms(item[cam])
-                    else:
-                        item[cam] = self.image_transforms(item[cam])
+                item[cam] = self.image_transforms(item[cam])
+                # if "primary" in cam:
+                #     item[cam] = self.image_transforms(item[cam])
+                # else:
+                #     if self.wrist_image_transforms is not None:
+                #         item[cam] = self.wrist_image_transforms(item[cam])
+                #     else:
+                #         item[cam] = self.image_transforms(item[cam])
                 # our
-                item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
+                # item[cam] = self.resize_with_pad(item[cam], 224, 224, pad_value=0)
         
         # our
         # if self.image_transforms is not None:
@@ -1380,11 +1381,12 @@ class MultiLeRobotDataset(torch.utils.data.Dataset):
         )
 
 class MultiSameDataset(torch.utils.data.Dataset):
-    def __init__(self, cfg, image_transforms, wrist_image_transforms, dataset_names = None):
+    def __init__(self, cfg, image_transforms, wrist_image_transforms = None, dataset_names = None):
         super().__init__()
         self.episodes = None
-        parent_dir = "/mnt/wangxiaofa/robot_dataset/lerobot-format/"
-        # parent_dir = "/Data/lerobot_data/simulated"
+        parent_dir = cfg.dataset.root
+        # parent_dir = "/mnt/wangxiaofa/robot_dataset/lerobot-format/"
+        # parent_dir = "/Data/lerobot_data/real_world"
         self.datasets = []
         meta_features = None
         episode_count = 0
