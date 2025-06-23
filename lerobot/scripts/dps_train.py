@@ -107,8 +107,11 @@ def train(cfg: TrainPipelineConfig):
     deepspeed.init_distributed()
     logger = init_logger(cfg)
     
+    # image_transforms = (
+    #     ImageTransforms(cfg.dataset.image_transforms) if cfg.dataset.image_transforms.enable else None
+    # )
     image_transforms = (
-        ImageTransforms(cfg.dataset.image_transforms) if cfg.dataset.image_transforms.enable else None
+        ImageTransforms(cfg.dataset.image_transforms)
     )
     # wrist_image_transforms = (
     #     ImageTransforms(cfg.dataset.wrist_image_transforms) if cfg.dataset.image_transforms.enable else None
