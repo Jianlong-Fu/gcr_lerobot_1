@@ -147,7 +147,7 @@ def train(cfg: TrainPipelineConfig):
     # dataset = make_dataset(cfg)
     # data_names = ["libero_spatial_no_noops_lerobot", "libero_goal_no_noops_lerobot",
     #               "libero_object_no_noops_lerobot", "libero_10_no_noops_lerobot"]
-    data_names = ["pizza_v3"]
+    data_names = ["pizza_final"]
     # logger.info(f"Dataset names:{data_names}")
     dataset = MultiSameDataset(cfg=cfg, 
                                image_transforms=image_transforms,
