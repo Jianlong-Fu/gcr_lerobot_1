@@ -1381,7 +1381,7 @@ class MultiLeRobotDataset(torch.utils.data.Dataset):
         )
 
 class MultiSameDataset(torch.utils.data.Dataset):
-    def __init__(self, cfg, image_transforms, wrist_image_transforms = None, dataset_names = None):
+    def __init__(self, cfg, image_transforms, wrist_image_transforms = None):
         super().__init__()
         self.episodes = None
         parent_dir = cfg.dataset.root
@@ -1390,6 +1390,15 @@ class MultiSameDataset(torch.utils.data.Dataset):
         self.datasets = []
         meta_features = None
         episode_count = 0
+        dataset_names = []
+        
+        mixture_spec = OXE_NAMED_MIXTURES[cfg.data_mix]
+        for d_name, d_weight in mixture_spec:
+            if d_name in dataset_names:
+                print(f"Skipping Duplicate Dataset: `{(d_name, d_weight)}`")
+                continue
+            dataset_names.append(d_name)
+        
         for d_name in dataset_names:
             data_root = os.path.join(parent_dir, d_name)
             repo_id = f"bulldog-{d_name}" # any

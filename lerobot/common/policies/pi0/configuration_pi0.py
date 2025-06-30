@@ -66,7 +66,7 @@ class PI0Config(PreTrainedConfig):
     optimizer_lr: float = 2.5e-5
     optimizer_betas: tuple[float, float] = (0.9, 0.95)
     optimizer_eps: float = 1e-8
-    optimizer_weight_decay: float = 1e-10
+    optimizer_weight_decay: float = 1e-2
 
     scheduler_warmup_steps: int = 1000 # total steps // gradient_acc_size (300K, 2.5K)
     # scheduler_warmup_steps: int = 3_000
