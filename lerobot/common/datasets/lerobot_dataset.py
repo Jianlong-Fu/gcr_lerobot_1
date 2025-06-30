@@ -1392,7 +1392,7 @@ class MultiSameDataset(torch.utils.data.Dataset):
         episode_count = 0
         dataset_names = []
         
-        mixture_spec = OXE_NAMED_MIXTURES[cfg.data_mix]
+        mixture_spec = OXE_NAMED_MIXTURES[cfg.dataset.data_mix]
         for d_name, d_weight in mixture_spec:
             if d_name in dataset_names:
                 print(f"Skipping Duplicate Dataset: `{(d_name, d_weight)}`")
