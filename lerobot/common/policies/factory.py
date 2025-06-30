@@ -153,7 +153,7 @@ def make_policy(
         print("training from scratch")
 
     if weight_pt_path:
-        weights = torch.load(weight_pt_path, map_location="cpu")
+        weights = torch.load(weight_pt_path, map_location="cpu")["module"]
         policy.load_state_dict(weights, strict=True)
         print(f"Load pt weights from:{weight_pt_path}")
     
