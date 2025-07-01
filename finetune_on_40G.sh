@@ -3,7 +3,7 @@ python lerobot/scripts/dps_train.py \
     --policy.type="pi0" \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
     --dataset.repo_id="any/simulted" \
-    --dataset.data_mix="pizza_task_8" \
+    --dataset.data_mix="pizza_task_12" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
     --job_name="07-01-pt-pi0-ft-pizza-task-8-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-large-lr-1st" \
