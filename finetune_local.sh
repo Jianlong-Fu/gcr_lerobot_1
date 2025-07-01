@@ -1,11 +1,13 @@
 deepspeed lerobot/scripts/dps_train.py \
     --deepspeed="./ds_zero2.json" \
     --policy.type="pi0" \
-    --dataset.root="/Data/lerobot_data/simulated/libero_spatial_no_noops_lerobot" \
+    --dataset.root="/Data/lerobot_data/real_world" \
     --dataset.repo_id="any/simulted" \
+    --dataset.data_mix="simpler_bridge" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="pi0-04-01-ft-libero-spatial" \
+    --job_name="pi0-04-21-ft-vlabench-local-bs-128-cos-sche" \
     --log_dir="logs" \
-    --output_dir="/Data/lzl/pi0-ft-simulated/0401-bs768-ft-libero-spatial-1st" \
-    --steps=30_000
+    --output_dir="/Data/lzl/pi0-ft-simulated/0421-ft-vlabench-bs-128-1st-cos-sche" \
+    --steps=30_000 \
+    # --dataset.image_transforms.enable=true
