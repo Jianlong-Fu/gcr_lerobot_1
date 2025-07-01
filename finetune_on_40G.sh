@@ -6,8 +6,8 @@ python lerobot/scripts/dps_train.py \
     --dataset.data_mix="pizza" \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="07-01-pt-pi0-ft-pizza-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-large-lr-1st" \
+    --job_name="07-01-pt-pi0-ft-pizza-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-1st" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/07-01-ft-pizza-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-large-lr-1st" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/07-01-ft-pizza-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-1st" \
     --steps=300_000 \
     --dataset.image_transforms.enable=false
