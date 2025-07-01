@@ -1393,11 +1393,16 @@ class MultiSameDataset(torch.utils.data.Dataset):
         dataset_names = []
         
         mixture_spec = OXE_NAMED_MIXTURES[cfg.dataset.data_mix]
+        is_pizza = False
         for d_name, d_weight in mixture_spec:
             if d_name in dataset_names:
                 print(f"Skipping Duplicate Dataset: `{(d_name, d_weight)}`")
                 continue
             dataset_names.append(d_name)
+            if "pizza" in d_name:
+                is_pizza = True
+        
+        print(f"Dataset names:{dataset_names}")
         
         for d_name in dataset_names:
             data_root = os.path.join(parent_dir, d_name)
@@ -1422,6 +1427,11 @@ class MultiSameDataset(torch.utils.data.Dataset):
         self.dataset = ConcatDataset(self.datasets)
         self.num_episodes = episode_count
         self.stats = aggregate_same_stats(self.datasets)
+        if is_pizza:
+            self.stats["action"]["mean"][7:] = 0
+            self.stats["action"]["std"][7:] = 1
+            self.stats["observation.state"]["mean"][8:] = 0
+            self.stats["observation.state"]["std"][8:] = 1
         print(self.stats, meta_features)
         self.meta = LeRobotDatasetMetadata.create_with_stats_feats(stats=self.stats, features=meta_features) # Note: I added a class function
         self.meta.repo_id = "Any"
