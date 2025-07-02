@@ -1460,7 +1460,8 @@ class MultiSameDataset(torch.utils.data.Dataset):
     
     def __getitem__(self, index):
         item = self.dataset[index]
-        print(item["action"].shape, item["observation.state"].shape)
+        # 50 14, 15
+        # print(item["action"].shape, item["observation.state"].shape)
         item["action"][:, 7:] = 0
         item["observation.state"][8:] = 0
         return item 
