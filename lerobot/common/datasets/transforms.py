@@ -204,16 +204,16 @@ class ImageTransformsConfig:
                 type="SharpnessJitter",
                 kwargs={"sharpness": (0.5, 1.5)},
             ),
-            # "crop_resize":ImageTransformConfig(
-            #     weight=1.0,
-            #     type="RandomResizedCrop",
-            #     kwargs={"size": (200, 200), "scale" : (0.9, 0.95), "ratio": (1.0, 1.0)},
-            # ),
-            # "rotate": ImageTransformConfig(
-            #     weight=1.0,
-            #     type="RandomRotate",
-            #     kwargs={"degrees": (-5, 5)},
-            # )
+            "crop_resize":ImageTransformConfig(
+                weight=1.0,
+                type="RandomResizedCrop",
+                kwargs={"size": (256, 256), "scale" : (0.9, 0.95), "ratio": (1.0, 1.0)},
+            ),
+            "rotate": ImageTransformConfig(
+                weight=1.0,
+                type="RandomRotate",
+                kwargs={"degrees": (-5, 5)},
+            )
         }
     )
 
