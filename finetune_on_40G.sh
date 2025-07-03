@@ -10,5 +10,4 @@ python lerobot/scripts/dps_train.py \
     --job_name="07-03-pt-pi0-ft-pizza-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
     --log_dir="/mnt/wangxiaofa/logs" \
     --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/07-03-ft-pizza-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
-    --steps=300_000 \
-    --dataset.image_transforms.enable=false
+    --steps=300_000
