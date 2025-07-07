@@ -1462,7 +1462,11 @@ class MultiSameDataset(torch.utils.data.Dataset):
         item = self.dataset[index]
         # 50 14, 15
         # print(item["action"].shape, item["observation.state"].shape)
-        item["action"][:, 6] = torch.where(item["action"][:, 6] < 0.5, -1, 1)
+        item["action"][:, 6] = torch.where(
+            item["action"][:, 6] < 0.5,
+            torch.tensor(-1.0, device=item["action"].device),
+            torch.tensor(1.0, device=item["action"].device)
+        )
         print(item["action"][:, 6])
         item["action"][:, 7:] = 0
         item["observation.state"][8:] = 0
