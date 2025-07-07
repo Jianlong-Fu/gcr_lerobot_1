@@ -1467,7 +1467,7 @@ class MultiSameDataset(torch.utils.data.Dataset):
             torch.tensor(-1.0, device=item["action"].device),
             torch.tensor(1.0, device=item["action"].device)
         )
-        print(item["action"][:, 6])
+        # print(item["action"][:, 6])
         item["action"][:, 7:] = 0
         item["observation.state"][8:] = 0
         return item 
