@@ -1428,8 +1428,8 @@ class MultiSameDataset(torch.utils.data.Dataset):
         self.num_episodes = episode_count
         self.stats = aggregate_same_stats(self.datasets)
         if is_pizza:
-            self.stats["action"]["mean"][7:] = 0
-            self.stats["action"]["std"][7:] = 1
+            self.stats["action"]["mean"][6:] = 0
+            self.stats["action"]["std"][6:] = 1
             self.stats["observation.state"]["mean"][8:] = 0
             self.stats["observation.state"]["std"][8:] = 1
         print(self.stats, meta_features)
@@ -1462,6 +1462,8 @@ class MultiSameDataset(torch.utils.data.Dataset):
         item = self.dataset[index]
         # 50 14, 15
         # print(item["action"].shape, item["observation.state"].shape)
+        item["action"][:, 6] = np.where(item["action"][:, 6] < 0.5, -1, 1)
+        print(item["action"][:, 6])
         item["action"][:, 7:] = 0
         item["observation.state"][8:] = 0
         return item 

@@ -4,10 +4,10 @@ python lerobot/scripts/dps_train.py \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
     --dataset.repo_id="any/simulted" \
     --dataset.data_mix="pizza_v3" \
-    --dataset.image_transforms.enable=false \
+    --dataset.image_transforms.enable=true \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="07-04-pt-pi0-ft-pizza-v3-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-1st" \
+    --job_name="07-07-pt-pi0-ft-pizza-v3-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/07-04-ft-pizza-v3-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-1st" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/07-07-ft-pizza-v3-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
     --steps=300_000
