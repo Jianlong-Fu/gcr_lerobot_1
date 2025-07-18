@@ -1427,12 +1427,12 @@ class MultiSameDataset(torch.utils.data.Dataset):
         self.dataset = ConcatDataset(self.datasets)
         self.num_episodes = episode_count
         self.stats = aggregate_same_stats(self.datasets)
-        if is_pizza:
-            self.stats["action"]["mean"][6:] = 0
-            self.stats["action"]["std"][6:] = 1
-            self.stats["observation.state"]["mean"][8:] = 0
-            self.stats["observation.state"]["std"][8:] = 1
-        print(self.stats, meta_features)
+        # if is_pizza:
+        #     self.stats["action"]["mean"][6:] = 0
+        #     self.stats["action"]["std"][6:] = 1
+        #     self.stats["observation.state"]["mean"][8:] = 0
+        #     self.stats["observation.state"]["std"][8:] = 1
+        # print(self.stats, meta_features)
         self.meta = LeRobotDatasetMetadata.create_with_stats_feats(stats=self.stats, features=meta_features) # Note: I added a class function
         self.meta.repo_id = "Any"
     
@@ -1462,18 +1462,22 @@ class MultiSameDataset(torch.utils.data.Dataset):
         item = self.dataset[index]
         # 50 14, 15
         # print(item["action"].shape, item["observation.state"].shape)
-        item["action"][:, 6] = torch.where(
-            item["action"][:, 6] < 0.5,
-            torch.tensor(-1.0, device=item["action"].device),
-            torch.tensor(1.0, device=item["action"].device)
-        )
-        # print(item["action"][:, 6])
-        item["action"][:, 7:] = 0
-        item["observation.state"][8:] = 0
+        
+        # item["action"][:, 6] = torch.where(
+        #     item["action"][:, 6] < 0.5,
+        #     torch.tensor(-1.0, device=item["action"].device),
+        #     torch.tensor(1.0, device=item["action"].device)
+        # )
+        # # print(item["action"][:, 6])
+        # item["action"][:, 7:] = 0
+        # item["observation.state"][8:] = 0
         return item 
 
 class MultiDatasetforDistTraining(torch.utils.data.Dataset):
-    def __init__(self, cfg, image_transforms, seed: int = 1000, data_mix: str = "toy", vla2root_json: str = None, banlance_weight=True):
+    def __init__(self, cfg, image_transforms, seed: int = 1000, 
+                 data_mix: str = "toy", 
+                 vla2root_json: str = None, 
+                 banlance_weight=True):
         """
         参数:
             cfg (TrainPipelineConfig): 训练配置文件
@@ -1519,8 +1523,8 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
         
         print(included_datasets, sample_weights)
         # get dataset and dataset length
-        parent_dir = "/mnt/wangxiaofa/robot_dataset/lerobot-format/"
-        # parent_dir = cfg.dataset.root
+        # parent_dir = "/mnt/wangxiaofa/robot_dataset/lerobot-format/"
+        parent_dir = cfg.dataset.root
         # parent_dir = "/data_16T/lerobot_openx/"
         self.datasets = []
         self.dataset_sizes = []
