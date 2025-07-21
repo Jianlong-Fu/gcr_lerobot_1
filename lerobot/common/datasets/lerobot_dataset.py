@@ -866,12 +866,12 @@ class LeRobotDataset(torch.utils.data.Dataset):
                     # print(f"start {idx} has pad")
                     has_pad = True
                     idx = random.randint(0, len(self.hf_dataset) - 1)
-                    item = self.hf_dataset[idx]
-                    ep_idx = item["episode_index"].item()
+                    # item = self.hf_dataset[idx]
+                    # ep_idx = item["episode_index"].item()
                 else:
                     has_pad = False
-                    item = self.hf_dataset[idx]
-                    ep_idx = item["episode_index"].item()
+                    # item = self.hf_dataset[idx]
+                    # ep_idx = item["episode_index"].item()
                     # import random
         # print(f"selected:{idx}")
         if len(self.meta.video_keys) > 0:
