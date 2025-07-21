@@ -3,11 +3,11 @@ python lerobot/scripts/dps_train.py \
     --policy.type="pi0" \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
     --dataset.repo_id="any/simulted" \
-    --dataset.data_mix="pizza_v9_task_5" \
+    --dataset.data_mix="pizza_v9_task_5_v0" \
     --dataset.image_transforms.enable=true \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="07-21-pt-pi0-ft-pizza-v9-task-5-chunk-12-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
+    --job_name="07-21-pt-pi0-ft-pizza-v9-task-5-v0-chunk-12-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0721-ft-pizza-v9-task-5-chunk-12-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0721-ft-pizza-v9-task-5-v0-chunk-12-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
     --steps=300_000
