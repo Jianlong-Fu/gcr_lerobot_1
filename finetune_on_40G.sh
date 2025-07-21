@@ -7,7 +7,7 @@ python lerobot/scripts/dps_train.py \
     --dataset.image_transforms.enable=true \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="07-18-pt-pi0-ft-pizza-v9-task-2-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
+    --job_name="07-21-pt-pi0-ft-pizza-v9-task-2-chunk-15-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0718-ft-pizza-v9-task-2-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0721-ft-pizza-v9-task-2-chunk-15-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
     --steps=300_000
