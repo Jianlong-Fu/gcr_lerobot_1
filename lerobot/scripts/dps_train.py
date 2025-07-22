@@ -106,15 +106,21 @@ def count_parameters_mb(model, logger):
     trainable_params = 0
     lora_params = 0
     action_expert_params = 0
+    vision_encoder_params = 0
 
     for name, param in model.named_parameters():
         param_size = param.numel()  # size in bytes
         if "gemma_expert" in name:
             action_expert_params += param_size
+        
+        if "vision_tower" in name:
+            vision_encoder_params += param_size
         if param.requires_grad:
             trainable_params += param_size
             if "lora" in name.lower():  # LoRA 层通常包含 "lora" 关键字
                 lora_params += param_size
+        
+        
         total_params += param_size
 
     def to_billion(n_params):
@@ -123,6 +129,7 @@ def count_parameters_mb(model, logger):
     logger.info(f"📦 action_expert 参数数量: {to_billion(action_expert_params):.3f} B")
     logger.info(f"🎯 可训练参数数量: {to_billion(trainable_params):.3f} B")
     logger.info(f"🔧 LoRA 参数数量: {to_billion(lora_params):.3f} B")
+    logger.info(f"📷 视觉编码器参数数量: {to_billion(vision_encoder_params):.3f} B")
     logger.info(f"📊 模型总参数数量: {to_billion(total_params):.3f} B")
 
 @parser.wrap()
