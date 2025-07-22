@@ -15,6 +15,9 @@ class PI0Config(PreTrainedConfig):
     n_obs_steps: int = 1
     chunk_size: int = 12
     n_action_steps: int = 12
+    
+    use_lora: bool = False
+    lora_rank: int = 32
 
     normalization_mapping: dict[str, NormalizationMode] = field(
         default_factory=lambda: {
@@ -57,8 +60,8 @@ class PI0Config(PreTrainedConfig):
     attention_implementation: str = "eager"  # or fa2, flex
 
     # Finetuning settings
-    # freeze_vision_encoder: bool = True
-    freeze_vision_encoder: bool = False
+    freeze_vision_encoder: bool = True
+    # freeze_vision_encoder: bool = False
     train_expert_only: bool = False
     train_state_proj: bool = True
 

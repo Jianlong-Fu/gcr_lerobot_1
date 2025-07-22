@@ -1448,7 +1448,9 @@ class MultiSameDataset(torch.utils.data.Dataset):
         #     self.stats["action"]["std"][6:] = 1
         #     self.stats["observation.state"]["mean"][8:] = 0
         #     self.stats["observation.state"]["std"][8:] = 1
-        # print(self.stats, meta_features)
+        self.stats["observation.state"]["mean"][:] = 0
+        self.stats["observation.state"]["std"][:] = 1
+        print(self.stats, meta_features)
         self.meta = LeRobotDatasetMetadata.create_with_stats_feats(stats=self.stats, features=meta_features) # Note: I added a class function
         self.meta.repo_id = "Any"
     
@@ -1487,6 +1489,7 @@ class MultiSameDataset(torch.utils.data.Dataset):
         # # print(item["action"][:, 6])
         # item["action"][:, 7:] = 0
         # item["observation.state"][8:] = 0
+        item["observation.state"][:] = 0
         return item 
 
 class MultiDatasetforDistTraining(torch.utils.data.Dataset):

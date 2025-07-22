@@ -15,6 +15,8 @@ from transformers.models.auto import CONFIG_MAPPING
 
 from lerobot.common.policies.pi0.flex_attention import flex_attention_forward
 
+from peft import get_peft_model, LoraConfig, TaskType
+
 
 def apply_rope(x, positions, max_wavelength=10_000):
     """
@@ -160,7 +162,7 @@ class PaliGemmaWithExpertConfig(PretrainedConfig):
 class PaliGemmaWithExpertModel(PreTrainedModel):
     config_class = PaliGemmaWithExpertConfig
 
-    def __init__(self, config: PaliGemmaWithExpertConfig):
+    def __init__(self, config: PaliGemmaWithExpertConfig, global_config: PretrainedConfig | None = None):
         super().__init__(config=config)
         self.config = config
         # init_path = "/mnt/wangxiaofa/RDT_module_params/paligemma-3b-pt-224/"
@@ -169,7 +171,21 @@ class PaliGemmaWithExpertModel(PreTrainedModel):
         #     self.paligemma = PaliGemmaForConditionalGeneration.from_pretrained(init_path)
         #     print(f"load paligemma from {init_path}")
         # else:
-        self.paligemma = PaliGemmaForConditionalGeneration(config=config.paligemma_config)
+        self.use_lora = global_config.use_lora
+        if global_config.use_lora:
+            print("Using LoRA for PaliGemma, rank:", global_config.lora_rank)
+            lora_config = LoraConfig(
+                r=global_config.lora_rank,
+                lora_alpha=min(global_config.lora_rank, 16),
+                lora_dropout=0.0,
+                target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+                init_lora_weights="gaussian",
+            )
+            self.paligemma = get_peft_model(
+                PaliGemmaForConditionalGeneration(config=config.paligemma_config), lora_config
+            )
+        else:
+            self.paligemma = PaliGemmaForConditionalGeneration(config=config.paligemma_config)
         self.gemma_expert = GemmaForCausalLM(config=config.gemma_expert_config)
         # Remove unused embed_tokens
         self.gemma_expert.model.embed_tokens = None
@@ -187,6 +203,13 @@ class PaliGemmaWithExpertModel(PreTrainedModel):
             self.paligemma.eval()
             for params in self.paligemma.parameters():
                 params.requires_grad = False
+        
+        if self.use_lora:
+            for name, param in self.paligemma.named_parameters():
+                if "lora" in name:
+                    param.requires_grad = True
+                else:
+                    param.requires_grad = False
 
     def train(self, mode: bool = True):
         super().train(mode)

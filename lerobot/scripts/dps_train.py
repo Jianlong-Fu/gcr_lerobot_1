@@ -61,6 +61,8 @@ from lerobot.configs import parser
 from lerobot.configs.train import TrainPipelineConfig
 from lerobot.scripts.eval import eval_policy
 
+
+
 def init_logger(cfg):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
@@ -98,6 +100,30 @@ def update_policy(
     model_engine.step()
     return loss, output_dict
 
+
+def count_parameters_mb(model, logger):
+    total_params = 0
+    trainable_params = 0
+    lora_params = 0
+    action_expert_params = 0
+
+    for name, param in model.named_parameters():
+        param_size = param.numel()  # size in bytes
+        if "gemma_expert" in name:
+            action_expert_params += param_size
+        if param.requires_grad:
+            trainable_params += param_size
+            if "lora" in name.lower():  # LoRA 层通常包含 "lora" 关键字
+                lora_params += param_size
+        total_params += param_size
+
+    def to_billion(n_params):
+        return n_params / 1e9
+
+    logger.info(f"📦 action_expert 参数数量: {to_billion(action_expert_params):.3f} B")
+    logger.info(f"🎯 可训练参数数量: {to_billion(trainable_params):.3f} B")
+    logger.info(f"🔧 LoRA 参数数量: {to_billion(lora_params):.3f} B")
+    logger.info(f"📊 模型总参数数量: {to_billion(total_params):.3f} B")
 
 @parser.wrap()
 def train(cfg: TrainPipelineConfig):
@@ -169,7 +195,9 @@ def train(cfg: TrainPipelineConfig):
         ds_meta=dataset.meta,
         # weight_pt_path="/mnt/wangxiaofa/pi0-ft-simulated/0626-ft-pizza-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wo-img-aug-1st/global_step90000/mp_rank_00_model_states.pt"
     )
+    
     logger.info("Policy model created...")
+    count_parameters_mb(policy, logger)
 
     # Environment setup (only in main process)
     eval_env = None

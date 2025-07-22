@@ -304,6 +304,69 @@ class PI0Policy(PreTrainedPolicy):
             self._action_queue.extend(actions.transpose(0, 1))
         return self._action_queue.popleft()
 
+    @torch.no_grad
+    def infer_wo_norm(self, batch, noise):
+        self.eval()
+        # batch = self.normalize_inputs(batch)
+        
+        images, img_masks = self.prepare_images(batch)
+        state = self.prepare_state(batch)
+        lang_tokens, lang_masks = self.prepare_language(batch)
+        
+        actions = self.model.sample_actions(
+            images, img_masks, lang_tokens, lang_masks, state, noise=noise
+        )
+        
+        original_action_dim = self.config.action_feature.shape[0]
+        actions = actions[:, :, :original_action_dim]
+        print("Actions:", actions[0, 0])
+    #     Actions: tensor([ 0.2793,  0.8125,  0.4609,  1.6328,  1.2266,  0.2559,  1.8750,  0.0073,
+    #      0.0166, -0.0122, -0.0117,  0.0366,  0.0000, -0.0273], device='cuda:0',
+    #    dtype=torch.bfloat16)
+
+
+        # actions = self.unnormalize_outputs({"action": actions})["action"]
+        
+        return actions
+    
+    @torch.no_grad
+    def infer(self, batch: dict[str, Tensor], noise: Tensor | None = None):
+        self.eval()
+
+        if self.config.adapt_to_pi_aloha:
+            batch[OBS_ROBOT] = self._pi_aloha_decode_state(batch[OBS_ROBOT])
+
+        batch = self.normalize_inputs(batch)
+        print("Norm:", batch["observation.state"])
+
+        images, img_masks = self.prepare_images(batch)
+        state = self.prepare_state(batch)
+        lang_tokens, lang_masks = self.prepare_language(batch)
+
+        actions = self.model.sample_actions(
+            images, img_masks, lang_tokens, lang_masks, state, noise=noise
+        )
+
+        # Unpad actions
+        original_action_dim = self.config.action_feature.shape[0]
+        actions = actions[:, :, :original_action_dim]
+        print("Actions:", actions[0, 0])
+
+    #     Actions: tensor([ 0.2793,  0.8125,  0.4609,  1.6328,  1.2266,  0.2559,  1.8750,  0.0073,
+    #      0.0166, -0.0122, -0.0117,  0.0366,  0.0000, -0.0273], device='cuda:0',
+    #    dtype=torch.bfloat16)
+        
+        actions = self.unnormalize_outputs({"action": actions})["action"]
+
+        if self.config.adapt_to_pi_aloha:
+            actions = self._pi_aloha_encode_actions(actions)
+        
+        print("Actions after unnorm:", actions[0, 0])
+
+        # actions = actions.transpose(0, 1)
+        # print(actions.shape)
+        return actions
+    
     def forward(self, batch: dict[str, Tensor], noise=None, time=None) -> tuple[Tensor, dict[str, Tensor]]:
         """Do a full training forward pass to compute the loss"""
         if self.config.adapt_to_pi_aloha:
@@ -315,6 +378,7 @@ class PI0Policy(PreTrainedPolicy):
         batch = self.normalize_targets(batch)
 
         images, img_masks = self.prepare_images(batch)
+        # print(batch.keys())
         state = self.prepare_state(batch)
         lang_tokens, lang_masks = self.prepare_language(batch)
         actions = self.prepare_action(batch)
@@ -360,10 +424,11 @@ class PI0Policy(PreTrainedPolicy):
         """
         images = []
         img_masks = []
-
         present_img_keys = [key for key in self.config.image_features if key in batch]
         # print(present_img_keys)
         missing_img_keys = [key for key in self.config.image_features if key not in batch]
+        # print("Present image keys:", present_img_keys)
+        # print("Missing image keys:", missing_img_keys)
 
         if len(present_img_keys) == 0:
             raise ValueError(
@@ -494,7 +559,7 @@ class PI0FlowMatching(nn.Module):
             train_expert_only=self.config.train_expert_only,
             attention_implementation=self.config.attention_implementation,
         )
-        self.paligemma_with_expert = PaliGemmaWithExpertModel(paligemma_with_export_config)
+        self.paligemma_with_expert = PaliGemmaWithExpertModel(paligemma_with_export_config, config)
 
         # Projections are float32
         self.state_proj = nn.Linear(self.config.max_state_dim, self.config.proj_width)
@@ -757,6 +822,6 @@ class PI0FlowMatching(nn.Module):
         )
         suffix_out = outputs_embeds[1]
         suffix_out = suffix_out[:, -self.config.n_action_steps :]
-        suffix_out = suffix_out.to(dtype=torch.float32)
+        # suffix_out = suffix_out.to(dtype=torch.float32)
         v_t = self.action_out_proj(suffix_out)
         return v_t
