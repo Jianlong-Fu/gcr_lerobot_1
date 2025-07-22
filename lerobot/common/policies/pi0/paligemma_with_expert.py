@@ -194,6 +194,13 @@ class PaliGemmaWithExpertModel(PreTrainedModel):
         self.set_requires_grad()
 
     def set_requires_grad(self):
+        if self.use_lora:
+            for name, param in self.paligemma.named_parameters():
+                if "lora" in name:
+                    param.requires_grad = True
+                else:
+                    param.requires_grad = False
+                    
         if self.config.freeze_vision_encoder:
             self.paligemma.vision_tower.eval()
             for params in self.paligemma.vision_tower.parameters():
@@ -204,12 +211,6 @@ class PaliGemmaWithExpertModel(PreTrainedModel):
             for params in self.paligemma.parameters():
                 params.requires_grad = False
         
-        if self.use_lora:
-            for name, param in self.paligemma.named_parameters():
-                if "lora" in name:
-                    param.requires_grad = True
-                else:
-                    param.requires_grad = False
 
     def train(self, mode: bool = True):
         super().train(mode)

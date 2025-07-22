@@ -16,7 +16,7 @@ class PI0Config(PreTrainedConfig):
     chunk_size: int = 12
     n_action_steps: int = 12
     
-    use_lora: bool = False
+    use_lora: bool = True
     lora_rank: int = 32
 
     normalization_mapping: dict[str, NormalizationMode] = field(
