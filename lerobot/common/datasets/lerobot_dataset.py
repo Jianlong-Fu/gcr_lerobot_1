@@ -848,31 +848,31 @@ class LeRobotDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, idx) -> dict:
         has_pad = True
-        while has_pad:
-            item = self.hf_dataset[idx]
-            ep_idx = item["episode_index"].item()
+        # while has_pad:
+        item = self.hf_dataset[idx]
+        ep_idx = item["episode_index"].item()
 
-            query_indices = None
-            if self.delta_indices is not None:
-                query_indices, padding = self._get_query_indices(idx, ep_idx)
-                query_result = self._query_hf_dataset(query_indices)
-                item = {**item, **padding}
-                for key, val in query_result.items():
-                    item[key] = val
-                
-                is_pad_tensor = padding[f"action_is_pad"]
-                if is_pad_tensor.any():
-                    # print(is_pad_tensor)
-                    # print(f"start {idx} has pad")
-                    has_pad = True
-                    idx = random.randint(0, len(self.hf_dataset) - 1)
-                    # item = self.hf_dataset[idx]
-                    # ep_idx = item["episode_index"].item()
-                else:
-                    has_pad = False
-                    # item = self.hf_dataset[idx]
-                    # ep_idx = item["episode_index"].item()
-                    # import random
+        query_indices = None
+        if self.delta_indices is not None:
+            query_indices, padding = self._get_query_indices(idx, ep_idx)
+            query_result = self._query_hf_dataset(query_indices)
+            item = {**item, **padding}
+            for key, val in query_result.items():
+                item[key] = val
+            
+            # is_pad_tensor = padding[f"action_is_pad"]
+            # if is_pad_tensor.any():
+            #     # print(is_pad_tensor)
+            #     # print(f"start {idx} has pad")
+            #     has_pad = True
+            #     idx = random.randint(0, len(self.hf_dataset) - 1)
+            #     # item = self.hf_dataset[idx]
+            #     # ep_idx = item["episode_index"].item()
+            # else:
+            #     has_pad = False
+            #     # item = self.hf_dataset[idx]
+            #     # ep_idx = item["episode_index"].item()
+            #     # import random
         # print(f"selected:{idx}")
         if len(self.meta.video_keys) > 0:
             current_ts = item["timestamp"].item()
