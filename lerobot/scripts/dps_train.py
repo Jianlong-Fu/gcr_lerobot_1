@@ -200,7 +200,7 @@ def train(cfg: TrainPipelineConfig):
         cfg=cfg.policy,
         device='cpu',
         ds_meta=dataset.meta,
-        # weight_pt_path="/mnt/wangxiaofa/pi0-ft-simulated/0626-ft-pizza-bs-4-16gpu-gra-acc-2-with-lr-decay-warm-1k-wo-img-aug-1st/global_step90000/mp_rank_00_model_states.pt"
+        weight_pt_path="/mnt/wangxiaofa/pi0-ft-simulated/0722-ft-pizza-v9-task-5-v0-chunk-12-wo-state-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st/global_step1700/mp_rank_00_model_states.pt"
     )
     
     logger.info("Policy model created...")
