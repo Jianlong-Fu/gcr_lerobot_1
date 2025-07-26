@@ -198,7 +198,7 @@ def train(cfg: TrainPipelineConfig):
     data_root = "/mnt/wangxiaofa/pi0-ft-simulated/0725-ft-pizza-v9-task-9-sep2-chunk-12-wo-state-lora-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st"
     # file_list = sorted(os.listdir(data_root))
     # print(f"File list:{file_list}")
-    for ckt_id in range(10000, 20000, 1000):
+    for ckt_id in range(20000, 30000, 1000):
         ckt_dir = os.path.join(data_root, f"global_step{ckt_id}")
         logger.info(f"Load checkpoint from:{ckt_dir}")
         ckt_path = os.path.join(ckt_dir, "mp_rank_00_model_states.pt")
