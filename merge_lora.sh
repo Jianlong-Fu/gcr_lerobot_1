@@ -3,7 +3,7 @@ python lerobot/scripts/merge_lora.py \
     --policy.use_lora=true \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
     --dataset.repo_id="any/simulted" \
-    --dataset.data_mix="pizza_v9_task_9_sep2" \
+    --dataset.data_mix="pizza_v9_task_9_sep1" \
     --dataset.image_transforms.enable=true \
     --wandb.enable=false \
     --wandb.project="pi0-ft-simulated" \

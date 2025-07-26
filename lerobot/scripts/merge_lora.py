@@ -195,7 +195,7 @@ def train(cfg: TrainPipelineConfig):
         logger.info("Setting model's tokenizer_max_length to 100")
         cfg.policy.tokenizer_max_length=100
     logger.info("Still creating policy...")
-    data_root = "/mnt/wangxiaofa/pi0-ft-simulated/0725-ft-pizza-v9-task-9-sep2-chunk-12-wo-state-lora-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st"
+    data_root = "/mnt/wangxiaofa/pi0-ft-simulated/0725-ft-pizza-v9-task-9-sep1-chunk-12-wo-state-lora-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st"
     # file_list = sorted(os.listdir(data_root))
     # print(f"File list:{file_list}")
     for ckt_id in range(20000, 30000, 1000):
