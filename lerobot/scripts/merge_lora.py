@@ -202,6 +202,7 @@ def train(cfg: TrainPipelineConfig):
         if ckt_id % 1000 != 0:
             continue
         ckt_dir = os.path.join(data_root, file)
+        print(f"Load checkpoint from:{ckt_dir}")
         ckt_path = os.path.join(ckt_dir, "mp_rank_00_model_states.pt")
         # print(cfg.policy.pretrained_path)
         policy = make_policy(
