@@ -137,7 +137,7 @@ def train(cfg: TrainPipelineConfig):
     cfg.validate()
     
     # Initialize DeepSpeed
-    deepspeed.init_distributed()
+    # deepspeed.init_distributed()
     logger = init_logger(cfg)
     
     # image_transforms = (
@@ -196,13 +196,10 @@ def train(cfg: TrainPipelineConfig):
         cfg.policy.tokenizer_max_length=100
     logger.info("Still creating policy...")
     data_root = "/mnt/wangxiaofa/pi0-ft-simulated/0725-ft-pizza-v9-task-9-sep2-chunk-12-wo-state-lora-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st"
-    file_list = sorted(os.listdir(data_root))
-    print(f"File list:{file_list}")
-    for file in file_list:
-        ckt_id = int(file.split("global_step")[-1])
-        if ckt_id % 1000 != 0:
-            continue
-        ckt_dir = os.path.join(data_root, file)
+    # file_list = sorted(os.listdir(data_root))
+    # print(f"File list:{file_list}")
+    for ckt_id in range(1000, 10000, 1000):
+        ckt_dir = os.path.join(data_root, f"global_step{ckt_id}")
         logger.info(f"Load checkpoint from:{ckt_dir}")
         ckt_path = os.path.join(ckt_dir, "mp_rank_00_model_states.pt")
         # print(cfg.policy.pretrained_path)
@@ -232,7 +229,7 @@ def train(cfg: TrainPipelineConfig):
     
     # logger.info("Policy model created...")
     # count_parameters_mb(policy, logger)
-    # print("Applying the LoRA")
+    # logger.info("Applying the LoRA")
     # lora_paligemma = policy.model.paligemma_with_expert.paligemma.merge_and_unload()
     # # print(lora_paligemma)
     # policy.model.paligemma_with_expert.paligemma = lora_paligemma

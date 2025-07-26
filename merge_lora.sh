@@ -1,5 +1,4 @@
 python lerobot/scripts/merge_lora.py \
-    --deepspeed="./ds_zero2.json" \
     --policy.type="pi0" \
     --policy.use_lora=true \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
@@ -13,3 +12,4 @@ python lerobot/scripts/merge_lora.py \
     --output_dir="0421-ft-vlabench-bs-128-1st-cos-sche" \
     --steps=30_000 \
     # --dataset.image_transforms.enable=true
+    # --deepspeed="./ds_zero2.json" \
