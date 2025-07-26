@@ -197,12 +197,13 @@ def train(cfg: TrainPipelineConfig):
     logger.info("Still creating policy...")
     data_root = "/mnt/wangxiaofa/pi0-ft-simulated/0725-ft-pizza-v9-task-9-sep1-chunk-12-wo-state-lora-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st"
     file_list = sorted(os.listdir(data_root))
+    print(f"File list:{file_list}")
     for file in file_list:
         ckt_id = int(file.split("global_step")[-1])
         if ckt_id % 1000 != 0:
             continue
         ckt_dir = os.path.join(data_root, file)
-        print(f"Load checkpoint from:{ckt_dir}")
+        logger.info(f"Load checkpoint from:{ckt_dir}")
         ckt_path = os.path.join(ckt_dir, "mp_rank_00_model_states.pt")
         # print(cfg.policy.pretrained_path)
         policy = make_policy(
@@ -221,6 +222,22 @@ def train(cfg: TrainPipelineConfig):
         save_path = os.path.join(ckt_dir, "lora_merge.pt")
         torch.save(policy.state_dict(), save_path)
         print("Save")
+    
+    # policy = make_policy(
+    #     cfg=cfg.policy,
+    #     device='cpu',
+    #     ds_meta=dataset.meta,
+    #     weight_pt_path="/Data/lzl/pi0-ft-simulated/pizza_task_5_lora/mp_rank_00_model_states.pt"
+    # )
+    
+    # logger.info("Policy model created...")
+    # count_parameters_mb(policy, logger)
+    # print("Applying the LoRA")
+    # lora_paligemma = policy.model.paligemma_with_expert.paligemma.merge_and_unload()
+    # # print(lora_paligemma)
+    # policy.model.paligemma_with_expert.paligemma = lora_paligemma
+    # torch.save(policy.state_dict(), "/Data/lzl/pi0-ft-simulated/pizza_task_5_lora/lora_merge.pt")
+    # print("Save")
     
     
 
