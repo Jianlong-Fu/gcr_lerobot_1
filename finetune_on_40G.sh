@@ -4,11 +4,11 @@ python lerobot/scripts/dps_train.py \
     --policy.use_lora=true \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
     --dataset.repo_id="any/simulted" \
-    --dataset.data_mix="pizza_v9_task_9_sep2" \
+    --dataset.data_mix="pizza_v9_task_5_sep2" \
     --dataset.image_transforms.enable=true \
     --wandb.enable=true \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="07-31-pt-pi0-ft-pizza-v9-task-9-sep2-r2-chunk-12-wo-state-lora-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
+    --job_name="08-19-pt-pi0-ft-pizza-v9-task-5-sep2-chunk-12-wo-state-lora-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0731-ft-pizza-v9-task-9-sep2-r2-chunk-12-wo-state-lora-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0819-ft-pizza-v9-task-5-sep2-chunk-12-wo-state-lora-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
     --steps=300_000
