@@ -171,28 +171,16 @@ class PaliGemmaWithExpertModel(PreTrainedModel):
         #     self.paligemma = PaliGemmaForConditionalGeneration.from_pretrained(init_path)
         #     print(f"load paligemma from {init_path}")
         # else:
+        self.global_config = global_config
         self.use_lora = global_config.use_lora
-        if global_config.use_lora:
-            print("Using LoRA for PaliGemma, rank:", global_config.lora_rank)
-            lora_config = LoraConfig(
-                r=global_config.lora_rank,
-                lora_alpha=min(global_config.lora_rank, 16),
-                lora_dropout=0.0,
-                target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
-                init_lora_weights="gaussian",
-            )
-            self.paligemma = get_peft_model(
-                PaliGemmaForConditionalGeneration(config=config.paligemma_config), lora_config
-            )
-        else:
-            self.paligemma = PaliGemmaForConditionalGeneration(config=config.paligemma_config)
+        self.paligemma = PaliGemmaForConditionalGeneration(config=config.paligemma_config)
         self.gemma_expert = GemmaForCausalLM(config=config.gemma_expert_config)
         # Remove unused embed_tokens
         self.gemma_expert.model.embed_tokens = None
 
         self.to_bfloat16_like_physical_intelligence()
         self.set_requires_grad()
-
+    
     def set_requires_grad(self):        
         if self.config.freeze_vision_encoder:
             self.paligemma.vision_tower.eval()

@@ -152,9 +152,18 @@ def make_policy(
         policy = policy_cls(**kwargs)
         print("training from scratch")
 
+    policy.model.add_lora()
+    
     if weight_pt_path:
         weights = torch.load(weight_pt_path, map_location="cpu")["module"]
-        policy.load_state_dict(weights, strict=True)
+        # print(weights.keys())
+        new_weights = {}
+        for key, value in weights.items():
+            # if "buffer" in key:
+            #     print(f"Skip loading buffer: {key}")
+            #     continue
+            new_weights[key] = value
+        policy.load_state_dict(new_weights, strict=True)
         print(f"Load pt weights from:{weight_pt_path}")
     
     # policy.to(device)

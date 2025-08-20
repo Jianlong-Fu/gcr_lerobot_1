@@ -66,6 +66,7 @@ from lerobot.common.policies.pi0.paligemma_with_expert import (
 )
 from lerobot.common.policies.pretrained import PreTrainedPolicy
 from lerobot.common.utils.utils import get_safe_dtype
+from peft import get_peft_model, LoraConfig, TaskType
 
 
 def create_sinusoidal_pos_embedding(
@@ -570,6 +571,25 @@ class PI0FlowMatching(nn.Module):
         self.action_time_mlp_out = nn.Linear(self.config.proj_width, self.config.proj_width)
 
         self.set_requires_grad()
+    
+    def add_lora(self):
+        if self.config.use_lora:
+            print("Using LoRA for PaliGemma, rank:", self.config.lora_rank)
+            lora_config = LoraConfig(
+                r = self.config.lora_rank,
+                lora_alpha = min(self.config.lora_rank, 16),
+                lora_dropout = 0.0,
+                target_modules = ["q_proj", "k_proj", "v_proj", "o_proj"],
+                init_lora_weights = "gaussian",
+            )
+            self.paligemma_with_expert.paligemma = get_peft_model(
+                self.paligemma_with_expert.paligemma, lora_config
+            )
+            for name, param in self.paligemma_with_expert.paligemma.named_parameters():
+                if "lora" in name:
+                    param.requires_grad = True
+                else:
+                    param.requires_grad = False
 
     def set_requires_grad(self):
         for params in self.state_proj.parameters():
