@@ -1443,11 +1443,11 @@ class MultiSameDataset(torch.utils.data.Dataset):
         self.dataset = ConcatDataset(self.datasets)
         self.num_episodes = episode_count
         self.stats = aggregate_same_stats(self.datasets)
-        if is_pizza:
-            self.stats["action"]["mean"][6:] = 0
-            self.stats["action"]["std"][6:] = 1
-            self.stats["observation.state"]["mean"][8:] = 0
-            self.stats["observation.state"]["std"][8:] = 1
+        # if is_pizza:
+        #     self.stats["action"]["mean"][6:] = 0
+        #     self.stats["action"]["std"][6:] = 1
+        #     self.stats["observation.state"]["mean"][8:] = 0
+        #     self.stats["observation.state"]["std"][8:] = 1
         self.stats["observation.state"]["mean"][:] = 0
         self.stats["observation.state"]["std"][:] = 1
         print(self.stats, meta_features)
