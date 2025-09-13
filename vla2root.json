@@ -36,5 +36,13 @@
     "calvin_abc_d" : "calvin_task_ABC_D_training",
     "pizza": "pizza_final",
     "pizza_task_8": "pizza_v7_task_8",
-    "pizza_task_12": "pizza_v7_task_12"
+    "pizza_v7_task_12_and_2": "pizza_v7_task_12_and_2",
+    "pizza_v9_task_5_sep2": "pizza_v9_task_5_sep2",
+    "pizza_v9_task_16_sep1": "pizza_v9_task_16_sep1",
+    "pizza_v9_task_16_sep2": "pizza_v9_task_16_sep2",
+    "pizza_v9_task_3_sep1": "pizza_v9_task_3_sep1",
+    "pizza_long_sub1_hz_2.5" : "pizza_sub_1_hz_2.5",
+    "pizza_long_sub3_hz_2.5" : "pizza_sub_3_hz_2.5",
+    "pizza_long_sub4_hz_2.5" : "pizza_sub_4_hz_2.5"
+
 }

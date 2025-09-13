@@ -184,8 +184,10 @@ def train(cfg: TrainPipelineConfig):
     # logger.info(f"Dataset names:{data_names}")
     dataset = MultiSameDataset(cfg=cfg, 
                                image_transforms=image_transforms,
+                               vla2root_json="vla2root.json"
                             #    wrist_image_transforms=wrist_image_transforms)
     )
+    
     
     logger.info(f"Data load from:{cfg.dataset.root}")
     logger.info(f"Dataset: {dataset}")
@@ -435,5 +437,5 @@ def train(cfg: TrainPipelineConfig):
 if __name__ == "__main__":
     # os.environ["TOKENIZERS_PARALLELISM"] = "false"
     # https://wandb.ai/authorize
-    os.environ['WANDB_API_KEY'] = '9e1c3ac77856b8ebb5573c4e1e250c84aabfb904'
+    # os.environ['WANDB_API_KEY'] = '9e1c3ac77856b8ebb5573c4e1e250c84aabfb904'
     train()

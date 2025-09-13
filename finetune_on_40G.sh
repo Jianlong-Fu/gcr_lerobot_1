@@ -4,11 +4,11 @@ python lerobot/scripts/dps_train.py \
     --policy.use_lora=true \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
     --dataset.repo_id="any/simulted" \
-    --dataset.data_mix="pizza_v9_task_19_sep1" \
-    --dataset.image_transforms.enable=true \
-    --wandb.enable=true \
+    --dataset.data_mix="pizza_long_sub3_hz_2.5" \
+    --dataset.image_transforms.enable=false \
+    --wandb.enable=false \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="08-19-pt-pi0-ft-pizza-v9-task-19-sep1-chunk-12-wo-state-lora-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
+    --job_name="0913-pizza-long-sub3-hz-2.5" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0819-ft-pizza-v9-task-19-sep1-chunk-12-wo-state-lora-bs-4-8gpu-gra-acc-2-with-lr-decay-warm-1k-wd-1e-2-normal-lr-aug-1st" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated" \
     --steps=300_000

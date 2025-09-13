@@ -441,7 +441,8 @@ class LeRobotDataset(torch.utils.data.Dataset):
         force_cache_sync: bool = False,
         download_videos: bool = True,
         video_backend: str | None = None,
-        keep_img_keys: str | None = None
+        keep_img_keys: str | None = None,
+        dataset_name: str = "default",
     ):
         """
         2 modes are available for instantiating this class, depending on 2 different use cases:
@@ -558,6 +559,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
         self.video_backend = video_backend if video_backend else "pyav"
         self.delta_indices = None
         self.keep_img_keys = keep_img_keys
+        self.dataset_name = dataset_name
 
         # Unused attributes
         self.image_writer = None
@@ -926,6 +928,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
         # Add task as a string
         task_idx = item["task_index"].item()
         item["task"] = self.meta.tasks[task_idx]
+        item["dataset_name"] = self.dataset_name
 
         return item
 
@@ -1397,7 +1400,9 @@ class MultiLeRobotDataset(torch.utils.data.Dataset):
         )
 
 class MultiSameDataset(torch.utils.data.Dataset):
-    def __init__(self, cfg, image_transforms, wrist_image_transforms = None):
+    def __init__(self, cfg, image_transforms, 
+                 wrist_image_transforms = None,
+                 vla2root_json: str = None):
         super().__init__()
         self.episodes = None
         parent_dir = cfg.dataset.root
@@ -1419,9 +1424,12 @@ class MultiSameDataset(torch.utils.data.Dataset):
                 is_pizza = True
         
         print(f"Dataset names:{dataset_names}")
+        with open(vla2root_json, "r") as f:
+            vla2data_root = json.load(f)
         
         for d_name in dataset_names:
-            data_root = os.path.join(parent_dir, d_name)
+            data_root = vla2data_root[d_name]
+            data_root = os.path.join(parent_dir, data_root)
             repo_id = f"bulldog-{d_name}" # any
             ds_meta = LeRobotDatasetMetadata(repo_id, root=data_root)
             if meta_features == None:
@@ -1435,6 +1443,7 @@ class MultiSameDataset(torch.utils.data.Dataset):
                 wrist_image_transforms=wrist_image_transforms,
                 video_backend=cfg.dataset.video_backend,
                 revision=cfg.dataset.revision,
+                dataset_name=d_name
             )
             episode_this_dataset = dataset.num_episodes
             episode_count += episode_this_dataset
@@ -1442,7 +1451,22 @@ class MultiSameDataset(torch.utils.data.Dataset):
 
         self.dataset = ConcatDataset(self.datasets)
         self.num_episodes = episode_count
-        self.stats = aggregate_same_stats(self.datasets)
+        self.stats = aggregate_same_stats(self.datasets, dataset_names)
+        # update meta
+        for d_name in dataset_names:
+            data_config = OXE_DATASET_CONFIGS[d_name]
+            image_obs_keys = data_config["image_obs_keys"]
+            for new_key, old_key in image_obs_keys.items():
+                meta_features[f"observation.images.{new_key}"] = meta_features.pop(f"observation.images.{old_key}")
+        
+        all_new_obs_image_keys = ["observation.images.primary", 
+                                  "observation.images.secondary", 
+                                  "observation.images.wrist"]
+        
+        for key in list(meta_features.keys()):
+            if "observation.images." in key and key not in all_new_obs_image_keys:
+                del meta_features[key]
+        
         # if is_pizza:
         #     self.stats["action"]["mean"][6:] = 0
         #     self.stats["action"]["std"][6:] = 1
@@ -1478,6 +1502,25 @@ class MultiSameDataset(torch.utils.data.Dataset):
     
     def __getitem__(self, index):
         item = self.dataset[index]
+        dataset_name = item["dataset_name"]
+        # v1
+        # item = self.dataset[index]
+        # # for key, value in item.items():
+        # #     print(f"{key}: {value}")
+        # dataset_name = item["dataset_name"]
+        # unify the observation
+        data_config = OXE_DATASET_CONFIGS[dataset_name]
+        image_obs_keys = data_config["image_obs_keys"]
+        exist_image = None
+        for new_key, old_key in image_obs_keys.items():
+            if old_key != None:
+                item[f"observation.images.{new_key}"] = item[f"observation.images.{old_key}"]
+                if old_key != new_key:
+                    del item[f"observation.images.{old_key}"]
+            else:
+                # if missing, use zero
+                item[f"observation.images.{new_key}"] = torch.zeros_like(exist_image)
+        item["observation.state"][:] = 0
         # 50 14, 15
         # print(item["action"].shape, item["observation.state"].shape)
         
@@ -1489,7 +1532,6 @@ class MultiSameDataset(torch.utils.data.Dataset):
         # # print(item["action"][:, 6])
         # item["action"][:, 7:] = 0
         # item["observation.state"][8:] = 0
-        item["observation.state"][:] = 0
         return item 
 
 class MultiDatasetforDistTraining(torch.utils.data.Dataset):
