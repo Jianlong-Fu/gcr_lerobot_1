@@ -13,8 +13,8 @@ from lerobot.configs.types import FeatureType, NormalizationMode, PolicyFeature
 class PI0Config(PreTrainedConfig):
     # Input / output structure.
     n_obs_steps: int = 1
-    chunk_size: int = 12
-    n_action_steps: int = 12
+    chunk_size: int = 50
+    n_action_steps: int = 50
     
     use_lora: bool = False
     lora_rank: int = 32
