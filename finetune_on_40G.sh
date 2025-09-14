@@ -7,9 +7,9 @@ python lerobot/scripts/dps_train.py \
     --dataset.data_mix="pizza_long_sub3_hz_2.5" \
     --dataset.image_transforms.enable=false \
     --wandb.enable=false \
-    --resume=true \
+    --resume=false \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="0913-pizza-long-sub3-hz-2.5-w-state" \
+    --job_name="0914-pizza-long-sub3-hz-2.5-w-state" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0913-pizza-long-sub3-hz-2.5-w-state" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0914-pizza-long-sub3-hz-2.5-w-state" \
     --steps=300_000
