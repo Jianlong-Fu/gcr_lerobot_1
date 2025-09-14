@@ -152,7 +152,6 @@ def make_policy(
         policy = policy_cls(**kwargs)
         print("training from scratch")
 
-    policy.model.add_lora()
     
     if weight_pt_path:
         weights = torch.load(weight_pt_path, map_location="cpu")["module"]
