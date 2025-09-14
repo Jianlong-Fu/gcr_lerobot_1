@@ -275,6 +275,7 @@ def train(cfg: TrainPipelineConfig):
     
     # Resume training state
     step = 0
+    # cfg.output_dir = os.path.join(cfg.output_dir, cfg.job_name)
     if cfg.resume:
         logger.info(f"Resuming training from {cfg.output_dir}")
         ckpt_path = cfg.output_dir
@@ -293,6 +294,8 @@ def train(cfg: TrainPipelineConfig):
         client_state = {
             'step': step
         }
+    
+    policy.model.add_lora()
         
     dl_iter = cycle(dataloader)
 
