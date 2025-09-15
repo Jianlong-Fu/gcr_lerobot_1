@@ -152,10 +152,9 @@ def make_policy(
         policy = policy_cls(**kwargs)
         print("training from scratch") 
     
-    policy.model.add_lora()
     if weight_pt_path:
         weights = torch.load(weight_pt_path, map_location="cpu")["module"]
-        # print(weights.keys())
+        print(weights.keys())
         new_weights = {}
         for key, value in weights.items():
             # if "buffer" in key:
@@ -168,5 +167,6 @@ def make_policy(
     # policy.to(device)
     assert isinstance(policy, nn.Module)
     # policy = torch.compile(policy, mode="reduce-overhead")
+    policy.model.add_lora()
 
     return policy
