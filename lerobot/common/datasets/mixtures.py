@@ -310,5 +310,9 @@ OXE_NAMED_MIXTURES: Dict[str, List[Tuple[str, float]]] = {
      "pizza_long_sub3_hz_15":[
             ("pizza_long_sub3_hz_15", 1.0),
      ],
+     "pizza_long_full_hz_2.5":[
+            ("pizza_long_full_hz_2.5", 1.0),
+     ]
+     
 }
 # fmt: on

@@ -4,12 +4,12 @@ python lerobot/scripts/dps_train.py \
     --policy.use_lora=true \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
     --dataset.repo_id="any/simulted" \
-    --dataset.data_mix="pizza_long_sub3_hz_2.5" \
+    --dataset.data_mix="pizza_long_full_hz_2.5" \
     --dataset.image_transforms.enable=false \
     --wandb.enable=false \
     --resume=false \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="0916-pizza-long-sub3-hz-2.5-w-state-resume" \
+    --job_name="0919-pizza-long-full-hz-2.5-wo-state" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0916-pizza-long-sub3-hz-2.5-w-state-resume" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0919-pizza-long-full-hz-2.5-wo-state" \
     --steps=300_000
