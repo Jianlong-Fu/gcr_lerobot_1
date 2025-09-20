@@ -9,7 +9,7 @@ python lerobot/scripts/dps_train.py \
     --wandb.enable=false \
     --resume=false \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="0919-pizza-long-full-hz-2.5-wo-state" \
+    --job_name="0919-pizza-long-full-hz-2.5-w-state" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0919-pizza-long-full-hz-2.5-wo-state" \
+    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0919-pizza-long-full-hz-2.5-w-state" \
     --steps=300_000
