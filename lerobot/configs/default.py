@@ -38,6 +38,7 @@ class DatasetConfig:
     use_imagenet_stats: bool = True
     video_backend: str = "pyav"
     data_mix: str = ""
+    use_state: bool = True
 
 
 @dataclass

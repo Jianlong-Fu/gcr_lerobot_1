@@ -1472,8 +1472,10 @@ class MultiSameDataset(torch.utils.data.Dataset):
         #     self.stats["action"]["std"][6:] = 1
         #     self.stats["observation.state"]["mean"][8:] = 0
         #     self.stats["observation.state"]["std"][8:] = 1
-        self.stats["observation.state"]["mean"][:] = 0
-        self.stats["observation.state"]["std"][:] = 1
+        self.use_state = cfg.dataset.use_state
+        if self.use_state == False:
+            self.stats["observation.state"]["mean"][:] = 0
+            self.stats["observation.state"]["std"][:] = 1
         print(self.stats, meta_features)
         self.meta = LeRobotDatasetMetadata.create_with_stats_feats(stats=self.stats, features=meta_features) # Note: I added a class function
         self.meta.repo_id = "Any"
@@ -1520,7 +1522,8 @@ class MultiSameDataset(torch.utils.data.Dataset):
             else:
                 # if missing, use zero
                 item[f"observation.images.{new_key}"] = torch.zeros_like(exist_image)
-        item["observation.state"][:] = 0
+        if self.use_state == False:
+            item["observation.state"][:] = 0
         # 50 14, 15
         # print(item["action"].shape, item["observation.state"].shape)
         

@@ -1,15 +1,30 @@
+USE_STATE=true
+JOB_NAME="1009-american-data-w-state"
+
+# 解析命令行参数
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --use_state)
+            USE_STATE="$2"
+            shift 2
+            ;;
+    esac
+done
+OUTPUT_DIR="/mnt/wangxiaofa/pi0-ft-simulated/${JOB_NAME}"
+
 python lerobot/scripts/dps_train.py \
     --deepspeed="./ds_zero2_40G.json" \
     --policy.type="pi0" \
-    --policy.use_lora=true \
+    --policy.use_lora=false \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
     --dataset.repo_id="any/simulted" \
-    --dataset.data_mix="pizza_long_full_hz_2.5" \
+    --dataset.data_mix="american_data" \
+    --dataset.use_state=$USE_STATE \
     --dataset.image_transforms.enable=false \
     --wandb.enable=false \
     --resume=false \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="0919-pizza-long-full-hz-2.5-wo-state-resume" \
+    --job_name="1009-american-data-w-state" \
     --log_dir="/mnt/wangxiaofa/logs" \
-    --output_dir="/mnt/wangxiaofa/pi0-ft-simulated/0919-pizza-long-full-hz-2.5-wo-state-resume" \
+    --output_dir=$OUTPUT_DIR \
     --steps=300_000
