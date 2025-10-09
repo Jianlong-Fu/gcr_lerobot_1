@@ -8,6 +8,10 @@ while [[ $# -gt 0 ]]; do
             USE_STATE="$2"
             shift 2
             ;;
+        --job_name)
+            USE_STATE="$2"
+            shift 2
+            ;;
     esac
 done
 OUTPUT_DIR="/mnt/wangxiaofa/pi0-ft-simulated/${JOB_NAME}"
@@ -24,7 +28,7 @@ python lerobot/scripts/dps_train.py \
     --wandb.enable=false \
     --resume=false \
     --wandb.project="pi0-ft-simulated" \
-    --job_name="1009-american-data-w-state" \
+    --job_name=$JOB_NAME \
     --log_dir="/mnt/wangxiaofa/logs" \
     --output_dir=$OUTPUT_DIR \
     --steps=300_000
