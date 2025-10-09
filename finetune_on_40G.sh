@@ -9,7 +9,7 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         --job_name)
-            USE_STATE="$2"
+            JOB_NAME="$2"
             shift 2
             ;;
     esac
