@@ -63,31 +63,46 @@ def decode_video_frames_torchvision(
     if backend == "pyav":
         keyframes_only = True  # pyav doesnt support accuracte seek
 
-    # set a video stream reader
-    # TODO(rcadene): also load audio stream at the same time
-    reader = torchvision.io.VideoReader(video_path, "video")
+    # 初始化空的返回值
+    empty_frame = torch.zeros((len(timestamps), 3, 224, 224), dtype=torch.float32)  # 可自定义尺寸
 
-    # set the first and last requested timestamps
-    # Note: previous timestamps are usually loaded, since we need to access the previous key frame
+    try:
+        reader = torchvision.io.VideoReader(video_path, "video")
+    except Exception as e:
+        logging.warning(f"[decode_video_frames_torchvision] Failed to open video {video_path}: {e}")
+        return empty_frame
+
+    if reader is None:
+        logging.warning(f"[decode_video_frames_torchvision] VideoReader returned None for {video_path}")
+        return empty_frame
+
     first_ts = min(timestamps)
     last_ts = max(timestamps)
 
-    # access closest key frame of the first requested frame
-    # Note: closest key frame timestamp is usually smaller than `first_ts` (e.g. key frame can be the first frame of the video)
-    # for details on what `seek` is doing see: https://pyav.basswood-io.com/docs/stable/api/container.html?highlight=inputcontainer#av.container.InputContainer.seek
-    reader.seek(first_ts, keyframes_only=keyframes_only)
+    try:
+        reader.seek(first_ts, keyframes_only=keyframes_only)
+    except Exception as e:
+        logging.warning(f"[decode_video_frames_torchvision] Seek failed for {video_path}: {e}")
+        return empty_frame
 
-    # load all frames until last requested frame
     loaded_frames = []
     loaded_ts = []
-    for frame in reader:
-        current_ts = frame["pts"]
-        if log_loaded_timestamps:
-            logging.info(f"frame loaded at timestamp={current_ts:.4f}")
-        loaded_frames.append(frame["data"])
-        loaded_ts.append(current_ts)
-        if current_ts >= last_ts:
-            break
+
+    try:
+        for frame in reader:
+            current_ts = frame["pts"]
+            if log_loaded_timestamps:
+                logging.info(f"frame loaded at timestamp={current_ts:.4f}")
+            loaded_frames.append(frame["data"])
+            loaded_ts.append(current_ts)
+            if current_ts >= last_ts:
+                break
+    except av.error.InvalidDataError as e:
+        logging.warning(f"[decode_video_frames_torchvision] Invalid data in {video_path}: {e}")
+        return empty_frame
+    except Exception as e:
+        logging.warning(f"[decode_video_frames_torchvision] Error reading frames from {video_path}: {e}")
+        return empty_frame
 
     if backend == "pyav":
         reader.container.close()
