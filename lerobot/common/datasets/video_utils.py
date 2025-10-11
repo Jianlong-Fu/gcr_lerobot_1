@@ -97,9 +97,6 @@ def decode_video_frames_torchvision(
             loaded_ts.append(current_ts)
             if current_ts >= last_ts:
                 break
-    except av.error.InvalidDataError as e:
-        logging.warning(f"[decode_video_frames_torchvision] Invalid data in {video_path}: {e}")
-        return empty_frame
     except Exception as e:
         logging.warning(f"[decode_video_frames_torchvision] Error reading frames from {video_path}: {e}")
         return empty_frame
