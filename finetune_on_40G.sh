@@ -31,7 +31,7 @@ python lerobot/scripts/dps_train.py \
     --dataset.use_state=$USE_STATE \
     --dataset.image_transforms.enable=false \
     --wandb.enable=false \
-    --resume=false \
+    --resume=true \
     --wandb.project="pi0-ft-simulated" \
     --job_name=$JOB_NAME \
     --log_dir="/mnt/wangxiaofa/logs" \
