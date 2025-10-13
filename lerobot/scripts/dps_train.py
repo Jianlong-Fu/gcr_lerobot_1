@@ -61,7 +61,9 @@ from lerobot.configs import parser
 from lerobot.configs.train import TrainPipelineConfig
 from lerobot.scripts.eval import eval_policy
 from peft import PeftModel
-
+import functools
+# 修复 PyTorch 2.6 的默认行为，让 DeepSpeed 正常加载 checkpoint
+torch.load = functools.partial(torch.load, weights_only=False)
 
 
 def init_logger(cfg):
@@ -320,9 +322,11 @@ def train(cfg: TrainPipelineConfig):
     completed_steps = step
     fwd_bwd_time = 0
     dataloading_s = 0
+    step = 0
     
     for _ in range(completed_steps, total_steps):
-        
+        step += 1
+        # print("Step:", step)
         
         start_time = time.perf_counter()
         batch = next(dl_iter)
