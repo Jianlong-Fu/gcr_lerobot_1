@@ -39,6 +39,8 @@ class DatasetConfig:
     video_backend: str = "pyav"
     data_mix: str = ""
     use_state: bool = True
+    train_num: int = 1500
+    split: str = "train"
 
 
 @dataclass

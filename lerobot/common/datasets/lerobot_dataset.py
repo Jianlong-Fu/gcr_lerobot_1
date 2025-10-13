@@ -1479,6 +1479,25 @@ class MultiSameDataset(torch.utils.data.Dataset):
         print(self.stats, meta_features)
         self.meta = LeRobotDatasetMetadata.create_with_stats_feats(stats=self.stats, features=meta_features) # Note: I added a class function
         self.meta.repo_id = "Any"
+        
+        # split train & val
+        self.train_num = cfg.dataset.train_num
+        if self.train_num > 0:
+            print(f"Use fixed train num {self.train_num} val num {self.num_episodes - self.train_num}")
+            self.dataset_len = self.train_num
+            data_range = list(range(len(self.dataset)))
+            random.seed(cfg.seed)
+            random.shuffle(data_range)
+            train_indices = data_range[:self.dataset_len]
+            val_indices = data_range[self.dataset_len:]
+            if cfg.dataset.split == "train":
+                self.dataset = Subset(self.dataset, train_indices)
+            else:
+                self.dataset = Subset(self.dataset, val_indices)
+        else:
+            self.dataset_len = len(self.dataset)
+            print(f"Train ratio {self.train_ratio}, train dataset len {len(self.dataset)}")
+        # if self.train_ratio < 1.0:
     
     def __len__(self):
         return len(self.dataset)
@@ -1522,8 +1541,10 @@ class MultiSameDataset(torch.utils.data.Dataset):
             else:
                 # if missing, use zero
                 item[f"observation.images.{new_key}"] = torch.zeros_like(exist_image)
+        
         if self.use_state == False:
             item["observation.state"][:] = 0
+        
         # 50 14, 15
         # print(item["action"].shape, item["observation.state"].shape)
         
