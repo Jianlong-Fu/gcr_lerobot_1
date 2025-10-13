@@ -296,6 +296,11 @@ def train(cfg: TrainPipelineConfig):
         client_state = {
             'step': step
         }
+    
+    if client_state is None:
+        client_state = {
+            'step': step
+        }
         
     dl_iter = cycle(dataloader)
 
@@ -322,10 +327,10 @@ def train(cfg: TrainPipelineConfig):
     completed_steps = step
     fwd_bwd_time = 0
     dataloading_s = 0
-    step = 0
+    # step = 0
     
     for _ in range(completed_steps, total_steps):
-        step += 1
+        # step += 1
         # print("Step:", step)
         
         start_time = time.perf_counter()
@@ -367,8 +372,8 @@ def train(cfg: TrainPipelineConfig):
             # checkpoint_dir = get_step_checkpoint_dir(cfg.output_dir, cfg.steps, step)
             os.makedirs(cfg.output_dir, exist_ok=True)
             
-            client_state['step'] = step
             if cfg.policy.use_lora:
+                client_state['step'] = step
                 # 获取 LoRA 模型引用
                 lora_module = model_engine.module.model.paligemma_with_expert.paligemma
                 assert isinstance(lora_module, PeftModel)
