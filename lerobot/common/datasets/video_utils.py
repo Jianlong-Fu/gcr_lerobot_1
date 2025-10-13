@@ -64,7 +64,7 @@ def decode_video_frames_torchvision(
         keyframes_only = True  # pyav doesnt support accuracte seek
 
     # 初始化空的返回值
-    empty_frame = torch.zeros((len(timestamps), 3, 480, 848), dtype=torch.float32)  # 可自定义尺寸
+    empty_frame = torch.zeros((1, 3, 480, 848), dtype=torch.float32)  # 可自定义尺寸
 
     try:
         reader = torchvision.io.VideoReader(video_path, "video")
