@@ -571,6 +571,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
         self.meta = LeRobotDatasetMetadata(
             self.repo_id, self.root, self.revision, force_cache_sync=force_cache_sync
         )
+        # print(f"Episodes in the dataset: {episodes}")
         if self.episodes is not None and self.meta._version >= packaging.version.parse("v2.1"):
             print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] - Loading episodes stats...")
             episodes_stats = [self.meta.episodes_stats[ep_idx] for ep_idx in self.episodes]
@@ -711,6 +712,12 @@ class LeRobotDataset(torch.utils.data.Dataset):
             path = str(self.root / "merged.parquet")
             if os.path.exists(path):
                 hf_dataset = load_dataset("parquet", data_files=path, split="train")
+                # if "american" in self.repo_id:
+                #     indices = [i for i, ep_idx in enumerate(hf_dataset['episode_index']) if ep_idx <= 1500]
+                #     hf_dataset = hf_dataset.select(indices)
+                # print("data info 1", hf_dataset[0]['episode_index'], hf_dataset[0]['frame_index'], hf_dataset[0]['index'])
+                # print("data info 2", hf_dataset[1]['episode_index'], hf_dataset[1]['frame_index'], hf_dataset[1]['index'])
+                # print("data info 3", hf_dataset[100]['episode_index'], hf_dataset[100]['frame_index'], hf_dataset[100]['index'])
             else:
                 path = str(self.root / "data")
                 hf_dataset = load_dataset("parquet", data_dir=path, split="train")
@@ -719,6 +726,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
         else:
             files = [str(self.root / self.meta.get_data_file_path(ep_idx)) for ep_idx in self.episodes]
             hf_dataset = load_dataset("parquet", data_files=files, split="train")
+            print(f"Selected episode:{len(hf_dataset)} from {self.episodes[0]} to {self.episodes[-1]}")
 
         # TODO(aliberts): hf_dataset.set_format("torch")
         hf_dataset.set_transform(hf_transform_to_torch)
@@ -1435,9 +1443,14 @@ class MultiSameDataset(torch.utils.data.Dataset):
             if meta_features == None:
                 meta_features = ds_meta.features
             delta_timestamps = resolve_delta_timestamps(cfg.policy, ds_meta)
+            if "american" in d_name:
+                episode_list = list(range(1501)) # 100个视频
+            else:
+                episode_list = None
             dataset = LeRobotDataset(
                 repo_id, 
                 root=data_root,
+                episodes=episode_list,
                 delta_timestamps=delta_timestamps,
                 image_transforms=image_transforms,
                 wrist_image_transforms=wrist_image_transforms,
@@ -1481,22 +1494,22 @@ class MultiSameDataset(torch.utils.data.Dataset):
         self.meta.repo_id = "Any"
         
         # split train & val
-        self.train_num = cfg.dataset.train_num
-        if self.train_num > 0:
-            print(f"Use fixed train num {self.train_num} val num {self.num_episodes - self.train_num}")
-            self.dataset_len = self.train_num
-            data_range = list(range(len(self.dataset)))
-            random.seed(cfg.seed)
-            random.shuffle(data_range)
-            train_indices = data_range[:self.dataset_len]
-            val_indices = data_range[self.dataset_len:]
-            if cfg.dataset.split == "train":
-                self.dataset = Subset(self.dataset, train_indices)
-            else:
-                self.dataset = Subset(self.dataset, val_indices)
-        else:
-            self.dataset_len = len(self.dataset)
-            print(f"Train ratio {self.train_ratio}, train dataset len {len(self.dataset)}")
+        # self.train_num = cfg.dataset.train_num
+        # if self.train_num > 0:
+        #     print(f"Use fixed train num {self.train_num} val num {self.num_episodes - self.train_num}")
+        #     self.dataset_len = self.train_num
+        #     data_range = list(range(len(self.dataset)))
+        #     random.seed(cfg.seed)
+        #     random.shuffle(data_range)
+        #     train_indices = data_range[:self.dataset_len]
+        #     val_indices = data_range[self.dataset_len:]
+        #     if cfg.dataset.split == "train":
+        #         self.dataset = Subset(self.dataset, train_indices)
+        #     else:
+        #         self.dataset = Subset(self.dataset, val_indices)
+        # else:
+        #     self.dataset_len = len(self.dataset)
+        #     print(f"Train ratio {self.train_ratio}, train dataset len {len(self.dataset)}")
         # if self.train_ratio < 1.0:
     
     def __len__(self):
@@ -1629,6 +1642,7 @@ class MultiDatasetforDistTraining(torch.utils.data.Dataset):
                 dataset = LeRobotDataset(
                     repo_id, 
                     root=data_root,
+                    episodes=episode_list,
                     delta_timestamps=delta_timestamps,
                     image_transforms=image_transforms,
                     video_backend=cfg.dataset.video_backend
