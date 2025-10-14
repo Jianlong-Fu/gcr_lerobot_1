@@ -54,7 +54,7 @@ class TrainPipelineConfig(HubMixin):
     log_freq: int = 400 # * gradient steps
     save_checkpoint: bool = True
     # Checkpoint is saved every `save_freq` training iterations and after the last training step.
-    save_freq: int = 1000
+    save_freq: int = 5000
     use_policy_training_preset: bool = True
     optimizer: OptimizerConfig | None = None
     scheduler: LRSchedulerConfig | None = None
