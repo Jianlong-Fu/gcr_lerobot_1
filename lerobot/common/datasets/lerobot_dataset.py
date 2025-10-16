@@ -769,8 +769,11 @@ class LeRobotDataset(torch.utils.data.Dataset):
             return get_hf_features_from_features(self.features)
 
     def _get_query_indices(self, idx: int, ep_idx: int) -> tuple[dict[str, list[int | bool]]]:
+        # print(f"Getting query indices for idx {idx} in episode {ep_idx}")
+        # ep_idx = ep_idx - 1501
         ep_start = self.episode_data_index["from"][ep_idx]
         ep_end = self.episode_data_index["to"][ep_idx]
+        # print(f"Episode {ep_idx + 1601} starts at {ep_start}, ends at {ep_end}, length {ep_end - ep_start}")
         query_indices = {
             key: [max(ep_start.item(), min(ep_end.item() - 1, idx + delta)) for delta in delta_idx]
             for key, delta_idx in self.delta_indices.items()
@@ -861,6 +864,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
         # while has_pad:
         item = self.hf_dataset[idx]
         ep_idx = item["episode_index"].item()
+        
 
         query_indices = None
         if self.delta_indices is not None:
@@ -1444,7 +1448,9 @@ class MultiSameDataset(torch.utils.data.Dataset):
                 meta_features = ds_meta.features
             delta_timestamps = resolve_delta_timestamps(cfg.policy, ds_meta)
             if "american" in d_name:
-                episode_list = list(range(1501)) # 100个视频
+                # episode_list = list(range(1501)) # 100个视频
+                episode_list = list(range(1501, 1601)) # 100个视频
+                # episode_list = list(range(1701))
             else:
                 episode_list = None
             dataset = LeRobotDataset(

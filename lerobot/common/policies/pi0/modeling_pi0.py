@@ -338,7 +338,7 @@ class PI0Policy(PreTrainedPolicy):
             batch[OBS_ROBOT] = self._pi_aloha_decode_state(batch[OBS_ROBOT])
 
         batch = self.normalize_inputs(batch)
-        print("Norm:", batch["observation.state"])
+        # print("Norm:", batch["observation.state"])
 
         images, img_masks = self.prepare_images(batch)
         state = self.prepare_state(batch)
@@ -351,7 +351,7 @@ class PI0Policy(PreTrainedPolicy):
         # Unpad actions
         original_action_dim = self.config.action_feature.shape[0]
         actions = actions[:, :, :original_action_dim]
-        print("Actions:", actions[0, 0])
+        # print("Actions:", actions[0, 0])
 
     #     Actions: tensor([ 0.2793,  0.8125,  0.4609,  1.6328,  1.2266,  0.2559,  1.8750,  0.0073,
     #      0.0166, -0.0122, -0.0117,  0.0366,  0.0000, -0.0273], device='cuda:0',
@@ -362,7 +362,7 @@ class PI0Policy(PreTrainedPolicy):
         if self.config.adapt_to_pi_aloha:
             actions = self._pi_aloha_encode_actions(actions)
         
-        print("Actions after unnorm:", actions[0, 0])
+        # print("Actions after unnorm:", actions[0, 0])
 
         # actions = actions.transpose(0, 1)
         # print(actions.shape)
@@ -384,7 +384,7 @@ class PI0Policy(PreTrainedPolicy):
         lang_tokens, lang_masks = self.prepare_language(batch)
         actions = self.prepare_action(batch)
         # print(images[0].shape, actions.shape, state.shape)
-        actions_is_pad = batch.get("actions_id_pad")
+        actions_is_pad = batch.get("action_is_pad")
         
         images = [self.convert_to_dtype(img) for img in images]
         lang_tokens = self.convert_to_dtype(lang_tokens)
