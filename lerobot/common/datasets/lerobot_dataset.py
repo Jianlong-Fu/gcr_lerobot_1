@@ -1476,7 +1476,8 @@ class MultiSameDataset(torch.utils.data.Dataset):
             data_config = OXE_DATASET_CONFIGS[d_name]
             image_obs_keys = data_config["image_obs_keys"]
             for new_key, old_key in image_obs_keys.items():
-                meta_features[f"observation.images.{new_key}"] = meta_features.pop(f"observation.images.{old_key}")
+                if f"observation.images.{new_key}" not in meta_features.keys():
+                    meta_features[f"observation.images.{new_key}"] = meta_features.pop(f"observation.images.{old_key}")
         
         all_new_obs_image_keys = ["observation.images.primary", 
                                   "observation.images.secondary", 
