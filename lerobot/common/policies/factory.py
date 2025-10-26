@@ -155,7 +155,7 @@ def make_policy(
         policy = policy_cls(**kwargs)
         print("training from scratch") 
     
-    if weight_pt_path:
+    if len(weight_pt_path) > 0:
         weights = torch.load(weight_pt_path, map_location="cpu")
         if "module" in weights.keys():
             weights = weights["module"]

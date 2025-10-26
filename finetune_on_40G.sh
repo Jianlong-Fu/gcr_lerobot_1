@@ -2,6 +2,7 @@ USE_STATE=true
 JOB_NAME="1009-american-data-w-state"
 DATA_MIX="simpler"
 MODEL_TYPE="pi05"
+PT_PATH="/mnt/wangxiaofa/pi0_05/pi05_base/model_new.pt"
 
 # 解析命令行参数
 while [[ $# -gt 0 ]]; do
@@ -20,6 +21,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --model_type)
             MODEL_TYPE="$2"
+            shift 2
+            ;;
+        --pt_path)
+            PT_PATH="$2"
             shift 2
             ;;
     esac
@@ -42,5 +47,5 @@ python lerobot/scripts/dps_train.py \
     --log_dir="/mnt/wangxiaofa/logs" \
     --output_dir=$OUTPUT_DIR \
     --steps=300_000 \
-    --policy.pt_weight_path="/mnt/wangxiaofa/pi0_05/pi05_base/model_new.pt" \
+    --policy.pt_weight_path=$PT_PATH \
     --policy.pretrained_path="" 
