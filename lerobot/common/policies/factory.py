@@ -55,6 +55,9 @@ def get_policy_class(name: str) -> PreTrainedPolicy:
         from lerobot.common.policies.pi0.modeling_pi0 import PI0Policy
 
         return PI0Policy
+    elif name == "pi05":
+        from lerobot.common.policies.pi05.modeling_pi05 import PI05Policy
+        return PI05Policy
     else:
         raise NotImplementedError(f"Policy with name {name} is not implemented.")
 
@@ -153,20 +156,28 @@ def make_policy(
         print("training from scratch") 
     
     if weight_pt_path:
-        weights = torch.load(weight_pt_path, map_location="cpu")["module"]
-        print(weights.keys())
+        weights = torch.load(weight_pt_path, map_location="cpu")
+        if "module" in weights.keys():
+            weights = weights["module"]
+        # print(weights.keys())
         new_weights = {}
         for key, value in weights.items():
             # if "buffer" in key:
             #     print(f"Skip loading buffer: {key}")
             #     continue
             new_weights[key] = value
-        policy.load_state_dict(new_weights, strict=True)
+        if "pi05" in weight_pt_path:
+            state_dict = policy._fix_pytorch_state_dict_keys(new_weights)
+            missing_key, unexpected_keys = policy.load_state_dict(state_dict, strict=False)
+            print(f"missing {missing_key} {unexpected_keys}")
+        else:
+            policy.load_state_dict(new_weights, strict=True)
         print(f"Load pt weights from:{weight_pt_path}")
     
     # policy.to(device)
     assert isinstance(policy, nn.Module)
     # policy = torch.compile(policy, mode="reduce-overhead")
-    policy.model.add_lora()
+    
+    # policy.model.add_lora()
 
     return policy

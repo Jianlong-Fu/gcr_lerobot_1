@@ -11,8 +11,13 @@ OBS_ROBOT = "observation.state"
 OBS_IMAGE = "observation.image"
 OBS_IMAGES = "observation.images"
 ACTION = "action"
+
 # for phy intelligence
 # ACTION = "actions"
+
+OBS_LANGUAGE = "observation.language"
+OBS_LANGUAGE_TOKENS = OBS_LANGUAGE + ".tokens"
+OBS_LANGUAGE_ATTENTION_MASK = OBS_LANGUAGE + ".attention_mask"
 
 # files & directories
 CHECKPOINTS_DIR = "checkpoints"
@@ -34,3 +39,5 @@ if "LEROBOT_HOME" in os.environ:
         f"You have a 'LEROBOT_HOME' environment variable set to '{os.getenv('LEROBOT_HOME')}'.\n"
         "'LEROBOT_HOME' is deprecated, please use 'HF_LEROBOT_HOME' instead."
     )
+
+OPENPI_ATTENTION_MASK_VALUE = -2.3819763e38

@@ -36,4 +36,6 @@ python lerobot/scripts/dps_train.py \
     --job_name=$JOB_NAME \
     --log_dir="/mnt/wangxiaofa/logs" \
     --output_dir=$OUTPUT_DIR \
-    --steps=300_000
+    --steps=300_000 \
+    --policy.pt_weight_path="/mnt/wangxiaofa/pi0_05/pi05_base/model_new.pt" \
+    --policy.pretrained_path="" 

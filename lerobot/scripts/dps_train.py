@@ -205,6 +205,7 @@ def train(cfg: TrainPipelineConfig):
         cfg=cfg.policy,
         device='cpu',
         ds_meta=dataset.meta,
+        weight_pt_path=cfg.policy.pt_weight_path
         # weight_pt_path="/mnt/wangxiaofa/pi0-ft-simulated/0919-pizza-long-full-hz-2.5-wo-state/global_step20000/mp_rank_00_model_states.pt"
     )
     

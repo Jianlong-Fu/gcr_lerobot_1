@@ -40,9 +40,10 @@ class PreTrainedConfig(draccus.ChoiceRegistry, HubMixin, abc.ABC):
     input_features: dict[str, PolicyFeature] = field(default_factory=dict)
     output_features: dict[str, PolicyFeature] = field(default_factory=dict)
     # pretrained_path : str = "/data_16T/deepseek/pi0"
-    pretrained_path : str = "/mnt/wangxiaofa/pi0_pretrain"
+    # pretrained_path : str = "/mnt/wangxiaofa/pi0_pretrain"
     # pretrained_path : str = None
-    # pretrained_path = "/Data/lzl/weights/pi_zero"
+    pretrained_path: str = "/Data/lzl/weights/pi_zero"
+    pt_weight_path: str = None
 
     def __post_init__(self):
         # self.pretrained_path = None
