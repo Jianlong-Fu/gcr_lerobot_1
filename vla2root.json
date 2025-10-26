@@ -52,5 +52,8 @@
     "cup_1": "cup_hz_4_sub1",
     "cup_2": "cup_hz_4_sub2",
     "cup_3": "cup_hz_4_sub3",
-    "cup_4": "cup_hz_4_sub4"
+    "cup_4": "cup_hz_4_sub4",
+    "cup_7hz": "cup_hz_7_plus",
+    "cup_2.5hz": "cup_hz_2.5_plus",
+    "cup_10hz": "cup_hz_10_plus"
 }
