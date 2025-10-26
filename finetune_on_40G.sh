@@ -1,6 +1,7 @@
 USE_STATE=true
 JOB_NAME="1009-american-data-w-state"
 DATA_MIX="simpler"
+MODEL_TYPE="pi05"
 
 # 解析命令行参数
 while [[ $# -gt 0 ]]; do
@@ -17,13 +18,17 @@ while [[ $# -gt 0 ]]; do
             DATA_MIX="$2"
             shift 2
             ;;
+        --model_type)
+            MODEL_TYPE="$2"
+            shift 2
+            ;;
     esac
 done
 OUTPUT_DIR="/mnt/wangxiaofa/pi0-ft-simulated/${JOB_NAME}"
 
 python lerobot/scripts/dps_train.py \
     --deepspeed="./ds_zero2_40G.json" \
-    --policy.type="pi0" \
+    --policy.type=$MODEL_TYPE \
     --policy.use_lora=false \
     --dataset.root="/mnt/wangxiaofa/robot_dataset/lerobot-format" \
     --dataset.repo_id="any/simulted" \
