@@ -1557,6 +1557,7 @@ class MultiSameDataset(torch.utils.data.Dataset):
         for new_key, old_key in image_obs_keys.items():
             if old_key != None:
                 item[f"observation.images.{new_key}"] = item[f"observation.images.{old_key}"]
+                exist_image = item[f"observation.images.{old_key}"]
                 if old_key != new_key:
                     del item[f"observation.images.{old_key}"]
             else:
