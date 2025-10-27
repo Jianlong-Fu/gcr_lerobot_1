@@ -47,5 +47,6 @@ python lerobot/scripts/dps_train.py \
     --log_dir="/mnt/wangxiaofa/logs" \
     --output_dir=$OUTPUT_DIR \
     --steps=300_000 \
+    --save_freq=4000 \
     --policy.pt_weight_path=$PT_PATH \
     --policy.pretrained_path="" 
